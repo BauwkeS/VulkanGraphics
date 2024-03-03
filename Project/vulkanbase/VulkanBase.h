@@ -114,6 +114,9 @@ private:
 		createFrameBuffers();
 		// week 02
 		createCommandPool();
+
+		createVertexBuffer();
+
 		createCommandBuffer();
 
 		// week 06
@@ -129,6 +132,18 @@ private:
 		vkDeviceWaitIdle(device);
 	}
 
+	void cleanupSwapChain() {
+		for (auto framebuffer : swapChainFramebuffers) {
+			vkDestroyFramebuffer(device, framebuffer, nullptr);
+		}
+
+		for (auto imageView : swapChainImageViews) {
+			vkDestroyImageView(device, imageView, nullptr);
+		}
+
+		vkDestroySwapchainKHR(device, swapChain, nullptr);
+	}
+
 	void cleanup() {
 		vkDestroySemaphore(device, renderFinishedSemaphore, nullptr);
 		vkDestroySemaphore(device, imageAvailableSemaphore, nullptr);
@@ -138,6 +153,11 @@ private:
 		for (auto framebuffer : swapChainFramebuffers) {
 			vkDestroyFramebuffer(device, framebuffer, nullptr);
 		}
+
+		cleanupSwapChain();
+
+		vkDestroyBuffer(device, vertexBuffer, nullptr);
+		vkFreeMemory(device, vertexBufferMemory, nullptr);
 
 		vkDestroyPipeline(device, graphicsPipeline, nullptr);
 		vkDestroyPipelineLayout(device, pipelineLayout, nullptr);
@@ -196,12 +216,18 @@ private:
 	VkCommandPool commandPool;
 	VkCommandBuffer commandBuffer;
 
+	VkBuffer vertexBuffer;
+	VkDeviceMemory vertexBufferMemory;
+
 	QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device);
 
 	void drawFrame(uint32_t imageIndex);
 	void createCommandBuffer();
 	void createCommandPool(); 
 	void recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex);
+
+	void createVertexBuffer();
+	uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
 	
 	// Week 03
 	// Renderpass concept
