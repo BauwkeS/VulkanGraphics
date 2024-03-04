@@ -134,18 +134,6 @@ private:
 		vkDeviceWaitIdle(device);
 	}
 
-	void cleanupSwapChain() {
-		for (auto framebuffer : swapChainFramebuffers) {
-			vkDestroyFramebuffer(device, framebuffer, nullptr);
-		}
-
-		for (auto imageView : swapChainImageViews) {
-			vkDestroyImageView(device, imageView, nullptr);
-		}
-
-		vkDestroySwapchainKHR(device, swapChain, nullptr);
-	}
-
 	void cleanup() {
 		vkDestroySemaphore(device, renderFinishedSemaphore, nullptr);
 		vkDestroySemaphore(device, imageAvailableSemaphore, nullptr);
@@ -155,8 +143,6 @@ private:
 		for (auto framebuffer : swapChainFramebuffers) {
 			vkDestroyFramebuffer(device, framebuffer, nullptr);
 		}
-
-		cleanupSwapChain();
 
 		vkDestroyBuffer(device, vertexBuffer, nullptr);
 		vkFreeMemory(device, vertexBufferMemory, nullptr);
