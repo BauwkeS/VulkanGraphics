@@ -13,45 +13,6 @@ void VulkanBase::createCommandPool(){
 	}
 }
 
-
-//void VulkanBase::createCommandBuffer() {
-//	VkCommandBufferAllocateInfo allocInfo{};
-//	allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-//	allocInfo.commandPool = commandPool;
-//	allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-//	allocInfo.commandBufferCount = 1;
-//
-//	if (vkAllocateCommandBuffers(device, &allocInfo, &commandBuffer) != VK_SUCCESS) {
-//		throw std::runtime_error("failed to allocate command buffers!");
-//	}
-//}
-//
-//void VulkanBase::recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex) {
-//	VkCommandBufferBeginInfo beginInfo{};
-//	beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-//	//beginInfo.flags = 0; // Optional
-//	//beginInfo.pInheritanceInfo = nullptr; // Optional
-//
-//	if (vkBeginCommandBuffer(commandBuffer, &beginInfo) != VK_SUCCESS) {
-//		throw std::runtime_error("failed to begin recording command buffer!");
-//	}
-//	drawFrame(imageIndex);
-//
-//
-//	vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
-//
-//	VkBuffer vertexBuffers[] = { vertexBuffer };
-//	VkDeviceSize offsets[] = { 0 };
-//	vkCmdBindVertexBuffers(commandBuffer, 0, 1, vertexBuffers, offsets); //aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-//
-//	vkCmdDraw(commandBuffer, static_cast<uint32_t>(vertices.size()), 1, 0, 0);
-//
-//
-//	if (vkEndCommandBuffer(commandBuffer) != VK_SUCCESS) {
-//		throw std::runtime_error("failed to record command buffer!");
-//	}
-//}
-
 void VulkanBase::createCommandBuffer() {
 	commandBuffers.resize(MAX_FRAMES_IN_FLIGHT);
 
