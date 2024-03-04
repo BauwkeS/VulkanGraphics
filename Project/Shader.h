@@ -2,6 +2,7 @@
 #include <vulkan/vulkan_core.h>
 #include <vector>
 #include <string>
+#include <array>
 
 class Shader
 {
@@ -30,6 +31,9 @@ private:
 	std::string m_FragmentShaderFile;
 
 	std::vector<VkPipelineShaderStageCreateInfo> m_ShaderStages;
+
+	std::array<VkVertexInputAttributeDescription, 2> m_AttributeDescriptors{};
+	VkVertexInputBindingDescription m_vertexInputBindingDescription{};
 
 	Shader(const Shader&) = delete;
 	Shader& operator=(const Shader&) = delete;

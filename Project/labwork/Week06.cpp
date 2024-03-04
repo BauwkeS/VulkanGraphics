@@ -43,8 +43,8 @@ void VulkanBase::drawFrame() {
 	uint32_t imageIndex;
 	vkAcquireNextImageKHR(device, swapChain, UINT64_MAX, imageAvailableSemaphore, VK_NULL_HANDLE, &imageIndex);
 
-	vkResetCommandBuffer(commandBuffer, /*VkCommandBufferResetFlagBits*/ 0);
-	recordCommandBuffer(commandBuffer, imageIndex);
+	vkResetCommandBuffer(commandBuffers[currentFrame], /*VkCommandBufferResetFlagBits*/ 0);
+	recordCommandBuffer(commandBuffers[currentFrame], imageIndex);
 
 	VkSubmitInfo submitInfo{};
 	submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
@@ -56,7 +56,7 @@ void VulkanBase::drawFrame() {
 	submitInfo.pWaitDstStageMask = waitStages;
 
 	submitInfo.commandBufferCount = 1;
-	submitInfo.pCommandBuffers = &commandBuffer;
+	submitInfo.pCommandBuffers = &commandBuffers[currentFrame];
 
 	VkSemaphore signalSemaphores[] = { renderFinishedSemaphore };
 	submitInfo.signalSemaphoreCount = 1;

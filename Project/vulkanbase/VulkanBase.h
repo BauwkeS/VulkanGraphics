@@ -24,6 +24,8 @@
 
 #include "Shader.h"
 
+const int MAX_FRAMES_IN_FLIGHT = 2;
+
 const std::vector<const char*> validationLayers = {
 	"VK_LAYER_KHRONOS_validation"
 };
@@ -196,6 +198,8 @@ private:
 	};
 	
 
+	uint32_t currentFrame = 0;
+
 	// Week 01: 
 	// Actual window
 	// simple fragment + vertex shader creation functions
@@ -214,7 +218,8 @@ private:
 	// CommandBuffer concept
 
 	VkCommandPool commandPool;
-	VkCommandBuffer commandBuffer;
+	//VkCommandBuffer commandBuffer;
+	std::vector<VkCommandBuffer> commandBuffers;
 
 	VkBuffer vertexBuffer;
 	VkDeviceMemory vertexBufferMemory;

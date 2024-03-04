@@ -8,6 +8,9 @@ void Shader::Initialize(const VkDevice& vkDevice)
 {
 	m_ShaderStages.push_back(createVertexShaderInfo(vkDevice));
 	m_ShaderStages.push_back(createFragmentShaderInfo(vkDevice));
+
+	m_vertexInputBindingDescription = Vertex::getBindingDescription();
+	m_AttributeDescriptors = Vertex::getAttributeDescriptions();
 }
 
 void Shader::DetroyShaderModules(const VkDevice& vkDevice)
@@ -48,13 +51,17 @@ VkPipelineVertexInputStateCreateInfo Shader::createVertexInputStateInfo()
 	VkPipelineVertexInputStateCreateInfo vertexInputInfo{};
 	vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
 	
-	auto bindingDescription = Vertex::getBindingDescription();
-	auto attributeDescriptions = Vertex::getAttributeDescriptions();
+	//auto bindingDescription = Vertex::getBindingDescription();
+	//auto attributeDescriptions = Vertex::getAttributeDescriptions();
 
 	vertexInputInfo.vertexBindingDescriptionCount = 1;
-	vertexInputInfo.vertexAttributeDescriptionCount = static_cast<uint32_t>(attributeDescriptions.size());
-	vertexInputInfo.pVertexBindingDescriptions = &bindingDescription;
-	vertexInputInfo.pVertexAttributeDescriptions = attributeDescriptions.data();
+	vertexInputInfo.vertexAttributeDescriptionCount = static_cast<uint32_t>(m_AttributeDescriptors.size());
+	vertexInputInfo.pVertexBindingDescriptions = &m_vertexInputBindingDescription;
+	vertexInputInfo.pVertexAttributeDescriptions = m_AttributeDescriptors.data();
+
+	//vertexInputInfo.vertexBindingDescriptionCount = static_cast<uint_32_t>(m_VertexInputAttributeDescription);
+	//vertexInputInfo.pVertexBindingDescriptions = &m_vertexInputBindingDescription;
+	//vertexInputInfo.vertexAttributeDescriptions = m_VertexInputAttributeDescriptors.data();
 
 	return vertexInputInfo;
 }
