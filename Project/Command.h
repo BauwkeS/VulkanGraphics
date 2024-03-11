@@ -29,7 +29,7 @@ public:
 
 	void DestroyCommandPool(VkDevice device, std::vector<VkFramebuffer> swapChainFramebuffers);
 	
-	std::vector<VkCommandBuffer>& GetCommandBuffers() { return commandBuffers; }
+	std::vector<VkCommandBuffer>& GetCommandBuffers() { return commandBuffers ;}
 
 private:
 	VkCommandPool m_commandPool;
