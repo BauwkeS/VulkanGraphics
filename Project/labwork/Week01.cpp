@@ -8,5 +8,5 @@ void VulkanBase::initWindow() {
 }
 
 void VulkanBase::drawScene() {
-	vkCmdDraw(commandBuffers[currentFrame], 6, 1, 0, 0);
+	//vkCmdDraw(commandBuffers[currentFrame], 6, 1, 0, 0);
 }

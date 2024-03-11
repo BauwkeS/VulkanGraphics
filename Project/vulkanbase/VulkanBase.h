@@ -23,6 +23,8 @@
 #include <algorithm>
 
 #include "Shader.h"
+#include "Command.h"
+#include "Pipeline.h"
 
 const int MAX_FRAMES_IN_FLIGHT = 2;
 
@@ -87,12 +89,15 @@ const std::vector<Vertex> vertices = {
 
 class VulkanBase {
 public:
+
 	void run() {
 		initWindow();
 		initVulkan();
 		mainLoop();
 		cleanup();
 	}
+
+	QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device);
 
 private:
 	void initVulkan() {
@@ -111,15 +116,14 @@ private:
 		
 		// week 03
 		m_GradientShader.Initialize(device);
-		createRenderPass();
-		createGraphicsPipeline();
-		createFrameBuffers();
+		m_Pipeline.CreateRenderPass(swapChainImageFormat, device);
+		m_Pipeline.CreateGraphicsPipeline(device);
+		m_Pipeline.CreateFrameBuffers(swapChainImageViews, swapChainExtent, device);
+
 		// week 02
-		createCommandPool();
-
-		createVertexBuffer();
-
-		createCommandBuffer();
+		m_CommandPoolBuffer.CreateCommandPool(findQueueFamilies(physicalDevice).graphicsFamily.value(),device);
+		m_CommandPoolBuffer.CreateVertexBuffer(device,physicalDevice);
+		m_CommandPoolBuffer.CreateCommandBuffer(device);
 
 		// week 06
 		createSyncObjects();
@@ -129,6 +133,7 @@ private:
 		while (!glfwWindowShouldClose(window)) {
 			glfwPollEvents();
 			// week 06
+
 			drawFrame();
 		}
 		vkDeviceWaitIdle(device);
@@ -139,17 +144,7 @@ private:
 		vkDestroySemaphore(device, imageAvailableSemaphore, nullptr);
 		vkDestroyFence(device, inFlightFence, nullptr);
 
-		vkDestroyCommandPool(device, commandPool, nullptr);
-		for (auto framebuffer : swapChainFramebuffers) {
-			vkDestroyFramebuffer(device, framebuffer, nullptr);
-		}
-
-		vkDestroyBuffer(device, vertexBuffer, nullptr);
-		vkFreeMemory(device, vertexBufferMemory, nullptr);
-
-		vkDestroyPipeline(device, graphicsPipeline, nullptr);
-		vkDestroyPipelineLayout(device, pipelineLayout, nullptr);
-		vkDestroyRenderPass(device, renderPass, nullptr);
+		m_Pipeline.DestroyPipeline(device);
 
 		for (auto imageView : swapChainImageViews) {
 			vkDestroyImageView(device, imageView, nullptr);
@@ -168,10 +163,6 @@ private:
 		glfwTerminate();
 	}
 
-	
-
-	
-
 	void createSurface() {
 		if (glfwCreateWindowSurface(instance, window, nullptr, &surface) != VK_SUCCESS) {
 			throw std::runtime_error("failed to create window surface!");
@@ -182,6 +173,7 @@ private:
 		"shaders/shader.vert.spv",
 		"shaders/shader.frag.spv"
 	};
+	
 	
 
 	uint32_t currentFrame = 0;
@@ -198,39 +190,6 @@ private:
 	
 
 	void drawScene();
-
-	// Week 02
-	// Queue families
-	// CommandBuffer concept
-
-	VkCommandPool commandPool;
-	//VkCommandBuffer commandBuffer;
-	std::vector<VkCommandBuffer> commandBuffers;
-
-	VkBuffer vertexBuffer;
-	VkDeviceMemory vertexBufferMemory;
-
-
-	void drawFrame(uint32_t imageIndex);
-	void createCommandBuffer();
-	void createCommandPool(); 
-	void recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex);
-
-	void createVertexBuffer();
-	uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
-	
-	// Week 03
-	// Renderpass concept
-	// Graphics pipeline
-	
-	std::vector<VkFramebuffer> swapChainFramebuffers;
-	VkPipelineLayout pipelineLayout;
-	VkPipeline graphicsPipeline;
-	VkRenderPass renderPass;
-
-	void createFrameBuffers();
-	void createRenderPass();
-	void createGraphicsPipeline();
 
 	// Week 04
 	// Swap chain and image view support
@@ -285,4 +244,7 @@ private:
 		std::cerr << "validation layer: " << pCallbackData->pMessage << std::endl;
 		return VK_FALSE;
 	}
+
+	Command m_CommandPoolBuffer{};
+	Pipeline m_Pipeline{ &m_CommandPoolBuffer,&m_GradientShader };
 };
