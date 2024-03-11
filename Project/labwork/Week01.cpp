@@ -6,7 +6,3 @@ void VulkanBase::initWindow() {
 	glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 	window = glfwCreateWindow(WIDTH, HEIGHT, "Vulkan", nullptr, nullptr);
 }
-
-void VulkanBase::drawScene() {
-	//vkCmdDraw(commandBuffers[currentFrame], 6, 1, 0, 0);
-}

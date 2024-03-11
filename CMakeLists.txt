@@ -15,7 +15,20 @@ FetchContent_Declare(
   GIT_TAG        3.3.8 # Specify the version you need
 )
 
+option(GLFW_BUILD_EXAMPLES "Build the GLFW example programs" OFF)
+option(GLFW_BUILD_TESTS "Build the GLFW test programs" OFF)
+option(GLFW_BUILD_DOCS "Build the GLFW documentation" OFF)
+option(GLFW_INSTALL "Generate installation target" OFF)
+option(GLFW_DOCUMENT_INTERNALS "Include internals in documentation" OFF)
+
 FetchContent_MakeAvailable(glfw)
+
+FetchContent_Declare(
+  glm
+  GIT_REPOSITORY https://github.com/g-truc/glm.git
+  GIT_TAG        1.0.1 # Specify the version you need
+)
+FetchContent_MakeAvailable(glm)
 
 # Find the required packages
 find_package(Vulkan REQUIRED)
