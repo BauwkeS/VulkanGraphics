@@ -53,7 +53,8 @@ struct SwapChainSupportDetails {
 };
 
 //const std::vector<Vertex> vertices = MeshFactory::CreateQuad(1.0f,0.0f,0.0f,1.0f);
-const std::vector<Vertex> vertices = MeshFactory::createOval(0.0f,0.0f,0.5f,100.0f);
+const std::vector<Vertex> vertices = MeshFactory::CreateOval(0.0f,0.0f,0.5f,100.0f);
+//const std::vector<Vertex> vertices = MeshFactory::CreateRoundedQuad(0.0f, 0.0f, 0.0f, 1.0f, 0.4,32);
 
 //const std::vector<Vertex> vertices = {
 //	{{0.0f, -0.5f}, {1.0f, 0.0f, 0.0f}},

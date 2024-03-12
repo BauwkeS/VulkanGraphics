@@ -41,6 +41,6 @@ class MeshFactory
 {
 public:
 	static std::vector<Vertex> CreateQuad(float top, float bottom, float left, float right);
-	static std::vector<Vertex> createOval(float x, float y, float radius, float numberOfSegments);
+	static std::vector<Vertex> CreateOval(float x, float y, float radius, float numberOfSegments);
 	static std::vector<Vertex> CreateRoundedQuad(float top, float bottom, float left, float right, float radius, float numberOfSegments);
 };
