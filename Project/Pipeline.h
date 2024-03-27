@@ -34,7 +34,7 @@ public:
 	void DrawFrame(uint32_t imageIndex, VkExtent2D swapChainExtent,
 		uint32_t currentFrame);
 	void DrawFrameW6(uint32_t currentFrame, uint32_t imageIndex,
-		VkExtent2D swapChainExtent);
+		VkExtent2D swapChainExtent, MeshFactory meshFact);
 
 	void DestroyPipeline(VkDevice device);
 };

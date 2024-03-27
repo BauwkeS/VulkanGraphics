@@ -43,7 +43,7 @@ void VulkanBase::drawFrame() {
 	uint32_t imageIndex;
 	vkAcquireNextImageKHR(device, swapChain, UINT64_MAX, imageAvailableSemaphore, VK_NULL_HANDLE, &imageIndex);
 
-	m_Pipeline.DrawFrameW6(currentFrame, imageIndex, swapChainExtent);
+	m_Pipeline.DrawFrameW6(currentFrame, imageIndex, swapChainExtent, m_MeshFactory);
 
 	VkSubmitInfo submitInfo{};
 	submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;

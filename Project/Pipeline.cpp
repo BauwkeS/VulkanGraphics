@@ -1,5 +1,6 @@
 #include "Pipeline.h"
 #include <stdexcept>
+#include <MeshFactory.h>
 
 void Pipeline::CreateFrameBuffers(std::vector<VkImageView> swapChainImageViews,
 	VkExtent2D swapChainExtent, VkDevice device)
@@ -181,10 +182,10 @@ void Pipeline::DrawFrame(uint32_t imageIndex, VkExtent2D swapChainExtent, uint32
 }
 
 void Pipeline::DrawFrameW6(uint32_t currentFrame, uint32_t imageIndex,
-	VkExtent2D swapChainExtent)
+	VkExtent2D swapChainExtent, MeshFactory meshFactory)
 {
 	vkResetCommandBuffer(m_commandInfo->GetCommandBuffers()[currentFrame], /*VkCommandBufferResetFlagBits*/ 0);
-	m_commandInfo->RecordCommandBuffer(m_commandInfo->GetCommandBuffers()[currentFrame], imageIndex,m_renderPass,swapChainExtent,m_graphicsPipeline,m_swapChainFramebuffers);
+	m_commandInfo->RecordCommandBuffer(m_commandInfo->GetCommandBuffers()[currentFrame], imageIndex,m_renderPass,swapChainExtent,m_graphicsPipeline,m_swapChainFramebuffers, meshFactory);
 }
 
 void Pipeline::DestroyPipeline(VkDevice device)

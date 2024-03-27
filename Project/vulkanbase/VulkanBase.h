@@ -53,7 +53,6 @@ struct SwapChainSupportDetails {
 };
 
 //const std::vector<Vertex> vertices = MeshFactory::CreateQuad(1.0f,0.0f,0.0f,1.0f);
-const std::vector<Vertex> vertices = MeshFactory::CreateOval(0.0f,0.0f,0.5f,100.0f);
 //const std::vector<Vertex> vertices = MeshFactory::CreateRoundedQuad(0.0f, 0.0f, 0.0f, 1.0f, 0.4,32);
 
 //const std::vector<Vertex> vertices = {
@@ -81,8 +80,9 @@ private:
 		setupDebugMessenger();
 		createSurface();
 
+		//-------------
 		// week 05
-		pickPhysicalDevice();
+		pickPhysicalDevice();	
 		createLogicalDevice();
 
 		// week 04 
@@ -97,9 +97,10 @@ private:
 
 		// week 02
 		m_CommandPoolBuffer.CreateCommandPool(findQueueFamilies(physicalDevice).graphicsFamily.value(),device);
-		m_CommandPoolBuffer.CreateVertexBuffer(device,physicalDevice);
+		//m_CommandPoolBuffer.CreateVertexBuffer(device,physicalDevice);
+		m_MeshFactory.CreateVertexBuffer(device,physicalDevice);
 		m_CommandPoolBuffer.CreateCommandBuffer(device);
-
+		//-----
 		// week 06
 		createSyncObjects();
 	}
@@ -118,6 +119,8 @@ private:
 		vkDestroySemaphore(device, renderFinishedSemaphore, nullptr);
 		vkDestroySemaphore(device, imageAvailableSemaphore, nullptr);
 		vkDestroyFence(device, inFlightFence, nullptr);
+
+		m_MeshFactory.DestroyMesh(device);
 
 		m_Pipeline.DestroyPipeline(device);
 
@@ -217,4 +220,5 @@ private:
 
 	Command m_CommandPoolBuffer{};
 	Pipeline m_Pipeline{ &m_CommandPoolBuffer,&m_GradientShader };
+	MeshFactory m_MeshFactory{};
 };
