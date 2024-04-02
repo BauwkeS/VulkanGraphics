@@ -2,13 +2,14 @@
 
 #define VK_USE_PLATFORM_WIN32_KHR
 #define GLFW_INCLUDE_VULKAN
-#include <GLFW/glfw3.h>
 
 #include <glm/glm.hpp>
 
 #define GLFW_EXPOSE_NATIVE_WIN32
 #include <GLFW/glfw3native.h>
 #include "VulkanUtil.h"
+
+#include <GLFW/glfw3.h>
 
 #include <array>
 #include <iostream>
@@ -26,6 +27,7 @@
 #include "Command.h"
 #include "Pipeline.h"
 #include "MeshFactory.h"
+#include "Scene.h"
 
 const int MAX_FRAMES_IN_FLIGHT = 2;
 
@@ -72,7 +74,7 @@ public:
 	}
 
 	QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device);
-
+	//QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device, VkSurfaceKHR surface);
 private:
 	void initVulkan() {
 		// week 06
@@ -90,17 +92,21 @@ private:
 		createImageViews();
 		
 		// week 03
-		m_GradientShader.Initialize(device);
-		m_Pipeline.CreateRenderPass(swapChainImageFormat, device);
-		m_Pipeline.CreateGraphicsPipeline(device);
-		m_Pipeline.CreateFrameBuffers(swapChainImageViews, swapChainExtent, device);
+		//m_GradientShader.Initialize(device);
+		//m_Pipeline.CreateRenderPass(swapChainImageFormat, device);
+		//m_Pipeline.CreateGraphicsPipeline(device);
+		//m_Pipeline.CreateFrameBuffers(swapChainImageViews, swapChainExtent, device);
 
-		// week 02
-		m_CommandPoolBuffer.CreateCommandPool(findQueueFamilies(physicalDevice).graphicsFamily.value(),device);
-		//m_CommandPoolBuffer.CreateVertexBuffer(device,physicalDevice);
-		m_MeshFactory.CreateVertexBuffer(device,physicalDevice);
-		m_CommandPoolBuffer.CreateCommandBuffer(device);
+		//// week 02
+		//m_CommandPoolBuffer.CreateCommandPool(findQueueFamilies(physicalDevice).graphicsFamily.value(),device);
+		////m_CommandPoolBuffer.CreateVertexBuffer(device,physicalDevice);
+		//m_MeshFactory.CreateVertexBuffer(device,physicalDevice);
+		//m_CommandPoolBuffer.CreateCommandBuffer(device);
 		//-----
+		
+		sceneOne.Initialize(device, swapChainImageFormat, swapChainExtent,
+			swapChainImageViews, surface, physicalDevice, findQueueFamilies(physicalDevice).graphicsFamily.value());
+		
 		// week 06
 		createSyncObjects();
 	}
@@ -221,4 +227,6 @@ private:
 	Command m_CommandPoolBuffer{};
 	Pipeline m_Pipeline{ &m_CommandPoolBuffer,&m_GradientShader };
 	MeshFactory m_MeshFactory{};
+	std::vector<MeshFactory*> m_AllMeshes{ &m_MeshFactory };
+	Scene sceneOne{ &m_Pipeline,m_AllMeshes,&m_CommandPoolBuffer,&m_GradientShader };
 };
