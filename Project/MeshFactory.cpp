@@ -63,11 +63,7 @@ void MeshFactory::DestroyMesh(VkDevice device)
 	vkFreeMemory(device, m_vertexBufferMemory, nullptr);
 }
 
-void MeshFactory::AddVertex(glm::vec2 pos, glm::vec3 color)
-{
-}
-
-std::vector<Vertex> MeshFactory::CreateQuad(float top, float bottom, float left, float right)
+void MeshFactory::CreateQuad(float top, float bottom, float left, float right)
 {
 	std::vector<Vertex> returnVec = {
 		{{top,left},{1.0f, 0.0f, 0.0f}},
@@ -78,11 +74,11 @@ std::vector<Vertex> MeshFactory::CreateQuad(float top, float bottom, float left,
 		{{bottom,right},{1.0f, 0.0f, 0.0f}},
 		{{top,left},{1.0f, 0.0f, 0.0f}},
 	};
-	
-	return returnVec;
+	//vertices.reserve(vertices.size() + 1)
+	vertices =(returnVec);
 }
 
-std::vector<Vertex> MeshFactory::CreateOval(float x, float y, float radius, float numberOfSegments)
+void MeshFactory::CreateOval(float x, float y, float radius, float numberOfSegments)
 {
 	float angle{glm::radians( 360 / numberOfSegments )};
 
@@ -100,10 +96,10 @@ std::vector<Vertex> MeshFactory::CreateOval(float x, float y, float radius, floa
 		returnVec.emplace_back(v3);
 	}
 
-	return returnVec;
+	vertices = (returnVec);
 }
 
-std::vector<Vertex> MeshFactory::CreateRoundedQuad(float top, float bottom, float left,
+void MeshFactory::CreateRoundedQuad(float top, float bottom, float left,
 	float right, float radius, float numberOfSegments)
 {
 	std::vector<Vertex> returnVec{};
@@ -122,5 +118,5 @@ std::vector<Vertex> MeshFactory::CreateRoundedQuad(float top, float bottom, floa
 		returnVec.emplace_back(v3);
 	}
 
-	return returnVec;
+	vertices = (returnVec);
 }

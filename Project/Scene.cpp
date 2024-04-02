@@ -5,6 +5,8 @@ void Scene::InitItems(VkDevice device, VkPhysicalDevice physicalDevice,
 	std::vector<VkImageView> swapChainImageViews,
 	uint32_t queueFamilyIndicesGraphicsFamValue)
 {
+	m_MeshFactory.CreateOval(0.0f, 0.0f, 0.5f, 100.0f);
+
 	// week 03
 	m_pipeline->InitShader(device);
 	m_pipeline->CreateRenderPass(swapChainImageFormat, device);

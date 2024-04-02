@@ -42,7 +42,7 @@ class MeshFactory
 private:
 	VkBuffer m_vertexBuffer;
 	VkDeviceMemory m_vertexBufferMemory;
-	const std::vector<Vertex> vertices = MeshFactory::CreateOval(0.0f, 0.0f, 0.5f, 100.0f);
+	std::vector<Vertex> vertices{};
 
 	uint32_t FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties, VkPhysicalDevice physicalDevice);
 
@@ -54,8 +54,7 @@ public:
 
 	VkBuffer GetVertextBuffer() { return m_vertexBuffer; }
 
-	void AddVertex(glm::vec2 pos, glm::vec3 color);
-	static std::vector<Vertex> CreateQuad(float top, float bottom, float left, float right);
-	static std::vector<Vertex> CreateOval(float x, float y, float radius, float numberOfSegments);
-	static std::vector<Vertex> CreateRoundedQuad(float top, float bottom, float left, float right, float radius, float numberOfSegments);
+	void CreateQuad(float top, float bottom, float left, float right);
+	void CreateOval(float x, float y, float radius, float numberOfSegments);
+	void CreateRoundedQuad(float top, float bottom, float left, float right, float radius, float numberOfSegments);
 };
