@@ -9,13 +9,28 @@
 class Scene
 {
 public:
+	Scene(Pipeline* pipeline
+		//,Command* commandInfo, Shader* gradientShaderInfo
+	) :
+		m_pipeline{pipeline}
+		//,m_commandInfo{commandInfo},
+		//m_gradientShaderInfo{gradientShaderInfo}
+		{}
+	~Scene() {}
 
+	void InitItems(VkDevice device, VkPhysicalDevice physicalDevice,
+		VkFormat swapChainImageFormat, VkExtent2D swapChainExtent,
+		std::vector<VkImageView> swapChainImageViews,
+		uint32_t queueFamilyIndicesGraphicsFamValue);
+	void PipelineDraw(uint32_t currentFrame, uint32_t imageIndex,
+		VkExtent2D swapChainExtent);
+	void CleanupItems(VkDevice device);
 
 private:
-	Pipeline m_pipeline;
-	std::vector<MeshFactory*> m_MeshFactoryVector;
-	Command* m_commandInfo;
-	Shader* m_gradientShaderInfo;
+	Pipeline* m_pipeline;
+	MeshFactory m_MeshFactory{};
+	//Command* m_commandInfo;
+	//Shader* m_gradientShaderInfo;
 };
 
 //Create a class that can contain multiple of theses meshes.

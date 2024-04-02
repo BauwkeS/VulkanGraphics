@@ -26,6 +26,7 @@
 #include "Command.h"
 #include "Pipeline.h"
 #include "MeshFactory.h"
+#include <Scene.h>
 
 const int MAX_FRAMES_IN_FLIGHT = 2;
 
@@ -89,17 +90,21 @@ private:
 		createSwapChain();
 		createImageViews();
 		
-		// week 03
-		m_GradientShader.Initialize(device);
-		m_Pipeline.CreateRenderPass(swapChainImageFormat, device);
-		m_Pipeline.CreateGraphicsPipeline(device);
-		m_Pipeline.CreateFrameBuffers(swapChainImageViews, swapChainExtent, device);
+		m_SceneOne.InitItems(device, physicalDevice, swapChainImageFormat,
+			swapChainExtent, swapChainImageViews, findQueueFamilies(physicalDevice).graphicsFamily.value());
 
-		// week 02
-		m_CommandPoolBuffer.CreateCommandPool(findQueueFamilies(physicalDevice).graphicsFamily.value(),device);
-		//m_CommandPoolBuffer.CreateVertexBuffer(device,physicalDevice);
-		m_MeshFactory.CreateVertexBuffer(device,physicalDevice);
-		m_CommandPoolBuffer.CreateCommandBuffer(device);
+
+		//// week 03
+		//m_Pipeline.InitShader(device);
+		//m_Pipeline.CreateRenderPass(swapChainImageFormat, device);
+		//m_Pipeline.CreateGraphicsPipeline(device);
+		//m_Pipeline.CreateFrameBuffers(swapChainImageViews, swapChainExtent, device);
+
+		//// week 02
+		//m_Pipeline.InitCommandPool(findQueueFamilies(physicalDevice).graphicsFamily.value(),device);
+		////m_CommandPoolBuffer.CreateVertexBuffer(device,physicalDevice);
+		//m_MeshFactory.CreateVertexBuffer(device,physicalDevice);
+		//m_Pipeline.InitCommandBuffer(device);
 		//-----
 		// week 06
 		createSyncObjects();
@@ -120,9 +125,10 @@ private:
 		vkDestroySemaphore(device, imageAvailableSemaphore, nullptr);
 		vkDestroyFence(device, inFlightFence, nullptr);
 
-		m_MeshFactory.DestroyMesh(device);
+		/*m_MeshFactory.DestroyMesh(device);
 
-		m_Pipeline.DestroyPipeline(device);
+		m_Pipeline.DestroyPipeline(device);*/
+		m_SceneOne.CleanupItems(device);
 
 		for (auto imageView : swapChainImageViews) {
 			vkDestroyImageView(device, imageView, nullptr);
@@ -220,5 +226,6 @@ private:
 
 	Command m_CommandPoolBuffer{};
 	Pipeline m_Pipeline{ &m_CommandPoolBuffer,&m_GradientShader };
-	MeshFactory m_MeshFactory{};
+	
+	Scene m_SceneOne{&m_Pipeline};
 };

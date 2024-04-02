@@ -26,6 +26,13 @@ public:
 		m_renderPass{} {};
 	~Pipeline()=default;
 
+	void InitShader(VkDevice device){ m_gradientShaderInfo->Initialize(device); }
+	void InitCommandPool(uint32_t queueFamilyIndicesGraphicsFamValue,
+		VkDevice device) {
+		m_commandInfo->CreateCommandPool(queueFamilyIndicesGraphicsFamValue, device);
+	}
+	void InitCommandBuffer(VkDevice device){ m_commandInfo->CreateCommandBuffer(device); }
+
 	void CreateFrameBuffers(std::vector<VkImageView> swapChainImageViews,
 		VkExtent2D swapChainExtent, VkDevice device);
 	void CreateRenderPass(VkFormat swapChainImageFormat, VkDevice device);
