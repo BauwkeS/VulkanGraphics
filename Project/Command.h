@@ -9,13 +9,22 @@ class Command
 {
 public:
 
-	Command()
+	Command(VkDevice device)
 		: m_commandPool{},
 		//m_vertexBuffer{},
 		//m_vertexBufferMemory{},
-		commandBuffers{}
-	{};
-	~Command() = default;
+		commandBuffers{},
+		m_Device{device}
+	{
+		/*CreateCommandPool(queueFamilyIndicesGraphicsFamValue, device);
+		CreateCommandBuffer(device);*/
+	};
+	~Command() {
+		vkFreeCommandBuffers(m_Device, m_commandPool, 1, &m_Buffer);
+		
+		vkDestroyCommandPool(m_Device, m_commandPool, nullptr);	
+	}
+	operator VkCommandBuffer() const { return m_Buffer; }
 
 	void CreateCommandPool(uint32_t queueFamilyIndicesGraphicsFamValue, VkDevice device);
 	void CreateCommandBuffer(VkDevice device);
@@ -32,9 +41,15 @@ public:
 	
 	std::vector<VkCommandBuffer>& GetCommandBuffers() { return commandBuffers ;}
 
+	void BufferStart();
+	void BufferEnd();
+
 private:
 	VkCommandPool m_commandPool;
 	std::vector<VkCommandBuffer> commandBuffers;
+	VkCommandBuffer m_Buffer{};
+	VkDevice m_Device{};
+	//VkDevice m_Device;
 	/*VkBuffer m_vertexBuffer;
 	VkDeviceMemory m_vertexBufferMemory;*/
 };

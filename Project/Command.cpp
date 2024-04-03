@@ -16,7 +16,7 @@ void Command::CreateCommandPool(uint32_t queueFamilyIndicesGraphicsFamValue,
 
 void Command::CreateCommandBuffer(VkDevice device)
 {
-	commandBuffers.resize(MAX_FRAMES_IN_FLIGHT);
+	/*commandBuffers.resize(MAX_FRAMES_IN_FLIGHT);
 
 	VkCommandBufferAllocateInfo allocInfo{};
 	allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
@@ -26,6 +26,19 @@ void Command::CreateCommandBuffer(VkDevice device)
 
 	if (vkAllocateCommandBuffers(device, &allocInfo, commandBuffers.data()) != VK_SUCCESS) {
 		throw std::runtime_error("failed to allocate command buffers!");
+	}*/
+
+	VkCommandBufferAllocateInfo allocInfo{};
+	
+	allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+	allocInfo.commandPool = m_commandPool;
+	allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+	allocInfo.commandBufferCount = 1;
+	
+
+	if (vkAllocateCommandBuffers(device, &allocInfo, &m_Buffer) != VK_SUCCESS)
+	{
+		throw std::runtime_error("failed to allocate command buffers!");
 	}
 }
 
@@ -33,12 +46,7 @@ void Command::RecordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageI
 	VkRenderPass renderPass, VkExtent2D swapChainExtent, VkPipeline graphicsPipeline,
 	std::vector<VkFramebuffer> swapChainFramebuffers, MeshFactory meshF)
 {
-	VkCommandBufferBeginInfo beginInfo{};
-	beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-
-	if (vkBeginCommandBuffer(commandBuffer, &beginInfo) != VK_SUCCESS) {
-		throw std::runtime_error("failed to begin recording command buffer!");
-	}
+	BufferStart();
 
 	VkRenderPassBeginInfo renderPassInfo{};
 	renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
@@ -79,9 +87,7 @@ void Command::RecordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageI
 
 	vkCmdEndRenderPass(commandBuffer);
 
-	if (vkEndCommandBuffer(commandBuffer) != VK_SUCCESS) {
-		throw std::runtime_error("failed to record command buffer!");
-	}
+	BufferEnd();
 }
 
 //void Command::CreateVertexBuffer(VkDevice device, VkPhysicalDevice physicalDevice)
@@ -133,11 +139,29 @@ void Command::RecordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageI
 
 void Command::DestroyCommandPool(VkDevice device, std::vector<VkFramebuffer> swapChainFramebuffers)
 {
-	vkDestroyCommandPool(device, m_commandPool, nullptr);
-	for (auto framebuffer : swapChainFramebuffers) {
+	vkFreeCommandBuffers(device, m_commandPool, 1, &m_Buffer);
+	/*for (auto framebuffer : swapChainFramebuffers) {
 		vkDestroyFramebuffer(device, framebuffer, nullptr);
-	}
+	}*/
 
+	vkDestroyCommandPool(device, m_commandPool, nullptr);
 	/*vkDestroyBuffer(device, m_vertexBuffer, nullptr);
 	vkFreeMemory(device, m_vertexBufferMemory, nullptr);*/
+}
+
+void Command::BufferStart()
+{
+	VkCommandBufferBeginInfo beginInfo{};
+	beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+
+	if (vkBeginCommandBuffer(m_Buffer, &beginInfo) != VK_SUCCESS) {
+		throw std::runtime_error("failed to begin recording command buffer!");
+	}
+}
+
+void Command::BufferEnd()
+{
+	if (vkEndCommandBuffer(m_Buffer) != VK_SUCCESS) {
+		throw std::runtime_error("failed to record command buffer!");
+	}
 }

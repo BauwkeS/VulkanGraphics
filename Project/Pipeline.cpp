@@ -2,65 +2,28 @@
 #include <stdexcept>
 #include <MeshFactory.h>
 
-void Pipeline::CreateFrameBuffers(std::vector<VkImageView> swapChainImageViews,
-	VkExtent2D swapChainExtent, VkDevice device)
+
+
+
+
+void Pipeline::DrawScene(VkCommandBuffer commandBuffer)
 {
-	m_swapChainFramebuffers.resize(swapChainImageViews.size());
-	for (size_t i = 0; i < swapChainImageViews.size(); i++) {
-		VkImageView attachments[] = {
-			swapChainImageViews[i]
-		};
+	vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_graphicsPipeline);
 
-		VkFramebufferCreateInfo framebufferInfo{};
-		framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
-		framebufferInfo.renderPass = m_renderPass;
-		framebufferInfo.attachmentCount = 1;
-		framebufferInfo.pAttachments = attachments;
-		framebufferInfo.width = swapChainExtent.width;
-		framebufferInfo.height = swapChainExtent.height;
-		framebufferInfo.layers = 1;
-
-		if (vkCreateFramebuffer(device, &framebufferInfo, nullptr, &m_swapChainFramebuffers[i]) != VK_SUCCESS) {
-			throw std::runtime_error("failed to create framebuffer!");
-		}
-	}
+	for (auto&& mesh : m_Meshes)
+		mesh.Draw(commandBuffer);
 }
 
-void Pipeline::CreateRenderPass(VkFormat swapChainImageFormat, VkDevice device)
+void Pipeline::InitMesh(MeshFactory mesh)
 {
-	VkAttachmentDescription colorAttachment{};
-	colorAttachment.format = swapChainImageFormat;
-	colorAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
-	colorAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
-	colorAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
-	colorAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
-	colorAttachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-	colorAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-	colorAttachment.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
-
-	VkAttachmentReference colorAttachmentRef{};
-	colorAttachmentRef.attachment = 0;
-	colorAttachmentRef.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
-
-	VkSubpassDescription subpass{};
-	subpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
-	subpass.colorAttachmentCount = 1;
-	subpass.pColorAttachments = &colorAttachmentRef;
-
-	VkRenderPassCreateInfo renderPassInfo{};
-	renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
-	renderPassInfo.attachmentCount = 1;
-	renderPassInfo.pAttachments = &colorAttachment;
-	renderPassInfo.subpassCount = 1;
-	renderPassInfo.pSubpasses = &subpass;
-
-	if (vkCreateRenderPass(device, &renderPassInfo, nullptr, &m_renderPass) != VK_SUCCESS) {
-		throw std::runtime_error("failed to create render pass!");
-	}
+	m_Meshes.emplace_back((mesh));
 }
 
 void Pipeline::CreateGraphicsPipeline(VkDevice device)
 {
+
+	m_GradientShaderInfo->Initialize(device);
+
 	VkPipelineViewportStateCreateInfo viewportState{};
 	viewportState.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
 	viewportState.viewportCount = 1;
@@ -118,11 +81,19 @@ void Pipeline::CreateGraphicsPipeline(VkDevice device)
 
 	pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
 
-	auto vertexInputStateInfo = m_gradientShaderInfo->createVertexInputStateInfo();
-	auto inputAssemblyStateInfo = m_gradientShaderInfo->createInputAssemblyStateInfo();
+	auto vertexShaderStageInfo = m_GradientShaderInfo->createVertexShaderInfo(device);
+	auto fragmentShaderStageInfo = m_GradientShaderInfo->createFragmentShaderInfo(device);
+	VkPipelineShaderStageCreateInfo shaderStages[] = { vertexShaderStageInfo,
+														   fragmentShaderStageInfo };
+
+
+	auto vertexInputStateInfo = m_GradientShaderInfo->createVertexInputStateInfo();
+	auto inputAssemblyStateInfo = m_GradientShaderInfo->createInputAssemblyStateInfo();
+
+
 
 	pipelineInfo.stageCount = 2;
-	pipelineInfo.pStages = m_gradientShaderInfo->GetShaderStages().data();
+	pipelineInfo.pStages = shaderStages;
 	pipelineInfo.pVertexInputState = &vertexInputStateInfo;
 	pipelineInfo.pInputAssemblyState = &inputAssemblyStateInfo;
 
@@ -132,7 +103,7 @@ void Pipeline::CreateGraphicsPipeline(VkDevice device)
 	pipelineInfo.pColorBlendState = &colorBlending;
 	pipelineInfo.pDynamicState = &dynamicState;
 	pipelineInfo.layout = m_pipelineLayout;
-	pipelineInfo.renderPass = m_renderPass;
+	pipelineInfo.renderPass = m_RenderPass;
 	pipelineInfo.subpass = 0;
 	pipelineInfo.basePipelineHandle = VK_NULL_HANDLE;
 
@@ -140,15 +111,16 @@ void Pipeline::CreateGraphicsPipeline(VkDevice device)
 		throw std::runtime_error("failed to create graphics pipeline!");
 	}
 
-	m_gradientShaderInfo->DetroyShaderModules(device);
+	//m_GradientShaderInfo->DetroyShaderModules(device);
 }
 
-void Pipeline::DrawFrame(uint32_t imageIndex, VkExtent2D swapChainExtent, uint32_t currentFrame)
+void Pipeline::DrawFrame(VkCommandBuffer commandBuffer, const VkExtent2D& swapChainExtent,
+	const std::vector<VkFramebuffer>& swapChainFramebuffers, uint32_t imageIndex)
 {
 	VkRenderPassBeginInfo renderPassInfo{};
 	renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-	renderPassInfo.renderPass = m_renderPass;
-	renderPassInfo.framebuffer = m_swapChainFramebuffers[imageIndex];
+	renderPassInfo.renderPass = m_RenderPass;
+	renderPassInfo.framebuffer = swapChainFramebuffers[imageIndex];
 	renderPassInfo.renderArea.offset = { 0, 0 };
 	renderPassInfo.renderArea.extent = swapChainExtent;
 
@@ -156,9 +128,9 @@ void Pipeline::DrawFrame(uint32_t imageIndex, VkExtent2D swapChainExtent, uint32
 	renderPassInfo.clearValueCount = 1;
 	renderPassInfo.pClearValues = &clearColor;
 
-	vkCmdBeginRenderPass(m_commandInfo->GetCommandBuffers()[currentFrame], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
+	vkCmdBeginRenderPass(commandBuffer, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 
-	vkCmdBindPipeline(m_commandInfo->GetCommandBuffers()[currentFrame], VK_PIPELINE_BIND_POINT_GRAPHICS, m_graphicsPipeline);
+	vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_graphicsPipeline);
 
 	VkViewport viewport{};
 	viewport.x = 0.0f;
@@ -167,32 +139,34 @@ void Pipeline::DrawFrame(uint32_t imageIndex, VkExtent2D swapChainExtent, uint32
 	viewport.height = (float)swapChainExtent.height;
 	viewport.minDepth = 0.0f;
 	viewport.maxDepth = 1.0f;
-	vkCmdSetViewport(m_commandInfo->GetCommandBuffers()[currentFrame], 0, 1, &viewport);
+	vkCmdSetViewport(commandBuffer, 0, 1, &viewport);
 
 	VkRect2D scissor{};
 	scissor.offset = { 0, 0 };
 	scissor.extent = swapChainExtent;
-	vkCmdSetScissor(m_commandInfo->GetCommandBuffers()[currentFrame], 0, 1, &scissor);
+	vkCmdSetScissor(commandBuffer, 0, 1, &scissor);
 
 	//drawScene();
-	vkCmdDraw(m_commandInfo->GetCommandBuffers()[currentFrame], 6, 1, 0, 0);
+	//vkCmdDraw(commandBuffer, 6, 1, 0, 0);
+	DrawScene(commandBuffer);
 
-
-	vkCmdEndRenderPass(m_commandInfo->GetCommandBuffers()[currentFrame]);
+	vkCmdEndRenderPass(commandBuffer);
 }
 
-void Pipeline::DrawFrameW6(uint32_t currentFrame, uint32_t imageIndex,
-	VkExtent2D swapChainExtent, MeshFactory meshFactory)
-{
-	vkResetCommandBuffer(m_commandInfo->GetCommandBuffers()[currentFrame], /*VkCommandBufferResetFlagBits*/ 0);
-	m_commandInfo->RecordCommandBuffer(m_commandInfo->GetCommandBuffers()[currentFrame], imageIndex,m_renderPass,swapChainExtent,m_graphicsPipeline,m_swapChainFramebuffers, meshFactory);
-}
+//void Pipeline::DrawFrame(VkCommandBuffer commandBuffer, const VkExtent2D& swapChainExtent,
+//	const std::vector<VkFramebuffer>& swapChainFramebuffers, uint32_t imageIndex, std::vector<MeshFactory> meshes)
+//{
+//	//for (auto& mesh : meshes) {
+//	//	vkResetCommandBuffer(m_commandInfo->GetCommandBuffers()[currentFrame], /*VkCommandBufferResetFlagBits*/ 0);
+//	//	m_commandInfo->RecordCommandBuffer(m_commandInfo->GetCommandBuffers()[currentFrame], imageIndex, m_renderPass, swapChainExtent, m_graphicsPipeline, m_swapChainFramebuffers,
+//	//		mesh);
+//
+//	//}
+//}
 
 void Pipeline::DestroyPipeline(VkDevice device)
 {
-	m_commandInfo->DestroyCommandPool(device, m_swapChainFramebuffers);
-
 	vkDestroyPipeline(device,m_graphicsPipeline, nullptr);
 	vkDestroyPipelineLayout(device, m_pipelineLayout, nullptr);
-	vkDestroyRenderPass(device, m_renderPass, nullptr);
+	//vkDestroyRenderPass(device, m_renderPass, nullptr);
 }

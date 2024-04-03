@@ -74,8 +74,7 @@ void MeshFactory::CreateQuad(float top, float bottom, float left, float right)
 		{{bottom,right},{1.0f, 0.0f, 0.0f}},
 		{{top,left},{1.0f, 0.0f, 0.0f}},
 	};
-	//vertices.reserve(vertices.size() + 1)
-	vertices =(returnVec);
+	vertices = returnVec;
 }
 
 void MeshFactory::CreateOval(float x, float y, float radius, float numberOfSegments)
@@ -96,7 +95,7 @@ void MeshFactory::CreateOval(float x, float y, float radius, float numberOfSegme
 		returnVec.emplace_back(v3);
 	}
 
-	vertices = (returnVec);
+	vertices = returnVec;
 }
 
 void MeshFactory::CreateRoundedQuad(float top, float bottom, float left,
@@ -118,5 +117,5 @@ void MeshFactory::CreateRoundedQuad(float top, float bottom, float left,
 		returnVec.emplace_back(v3);
 	}
 
-	vertices = (returnVec);
+	vertices = returnVec;
 }

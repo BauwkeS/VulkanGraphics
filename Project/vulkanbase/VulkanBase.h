@@ -27,6 +27,7 @@
 #include "Pipeline.h"
 #include "MeshFactory.h"
 #include <Scene.h>
+#include <labwork/Week03.cpp>
 
 const int MAX_FRAMES_IN_FLIGHT = 2;
 
@@ -90,9 +91,18 @@ private:
 		createSwapChain();
 		createImageViews();
 		
-		m_SceneOne.InitItems(device, physicalDevice, swapChainImageFormat,
-			swapChainExtent, swapChainImageViews, findQueueFamilies(physicalDevice).graphicsFamily.value());
+		createRenderPass();
 
+		m_Pipeline = new Pipeline(m_renderPass);
+		m_SceneOne = new Scene(m_Pipeline, m_renderPass);
+
+		m_SceneOne->InitItems(device, physicalDevice, swapChainImageFormat,
+			swapChainExtent, swapChainImageViews, findQueueFamilies(physicalDevice).graphicsFamily.value());
+		createFrameBuffers();
+
+		m_CommandPoolBuffer = new Command(device);
+		m_CommandPoolBuffer->CreateCommandPool(findQueueFamilies(physicalDevice).graphicsFamily.value(), device);
+		m_CommandPoolBuffer->CreateCommandBuffer(device);
 
 		//// week 03
 		//m_Pipeline.InitShader(device);
@@ -128,7 +138,14 @@ private:
 		/*m_MeshFactory.DestroyMesh(device);
 
 		m_Pipeline.DestroyPipeline(device);*/
-		m_SceneOne.CleanupItems(device);
+
+		m_SceneOne->CleanupItems(device);
+
+
+		vkDestroyRenderPass(device, m_renderPass, nullptr);
+		//m_CommandPoolBuffer.DestroyCommandPool(device, m_swapChainFramebuffers);
+
+
 
 		for (auto imageView : swapChainImageViews) {
 			vkDestroyImageView(device, imageView, nullptr);
@@ -153,10 +170,10 @@ private:
 		}
 	}
 
-	Shader m_GradientShader{
+	/*Shader m_GradientShader{
 		"shaders/shader.vert.spv",
 		"shaders/shader.frag.spv"
-	};
+	};*/
 	
 
 	uint32_t currentFrame = 0;
@@ -169,6 +186,11 @@ private:
 
 	GLFWwindow* window;
 	void initWindow();
+
+
+	std::vector<VkFramebuffer> m_swapChainFramebuffers;
+
+	VkRenderPass m_renderPass;
 
 	// Week 04
 	// Swap chain and image view support
@@ -224,8 +246,10 @@ private:
 		return VK_FALSE;
 	}
 
-	Command m_CommandPoolBuffer{};
-	Pipeline m_Pipeline{ &m_CommandPoolBuffer,&m_GradientShader };
+	Command* m_CommandPoolBuffer{};
+	Pipeline* m_Pipeline{ };
 	
-	Scene m_SceneOne{&m_Pipeline};
+	Scene* m_SceneOne{};
+	void createRenderPass();
+	void  createFrameBuffers();
 };

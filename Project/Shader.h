@@ -21,10 +21,11 @@ public:
 	void DetroyShaderModules(const VkDevice& vkDevice);
 	
 	VkPipelineVertexInputStateCreateInfo createVertexInputStateInfo();
+	
 	VkPipelineInputAssemblyStateCreateInfo createInputAssemblyStateInfo();
-private:
 	VkPipelineShaderStageCreateInfo createFragmentShaderInfo(const VkDevice& vkDevice);
 	VkPipelineShaderStageCreateInfo createVertexShaderInfo(const VkDevice& vkDevice);
+private:
 	VkShaderModule createShaderModule(const VkDevice& vkDevice, const std::vector<char>& code);
 
 	std::string m_VertexShaderFile;
