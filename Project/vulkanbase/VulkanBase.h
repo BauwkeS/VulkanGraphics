@@ -93,16 +93,16 @@ private:
 		
 		createRenderPass();
 
-		m_Pipeline = new Pipeline(m_renderPass);
-		m_SceneOne = new Scene(m_Pipeline, m_renderPass);
+		m_Pipeline = new Pipeline(device,m_renderPass);
+		m_SceneOne = new Scene(device,physicalDevice, m_Pipeline, m_renderPass);
 
-		m_SceneOne->InitItems(device, physicalDevice, swapChainImageFormat,
+		m_SceneOne->InitItems(swapChainImageFormat,
 			swapChainExtent, swapChainImageViews, findQueueFamilies(physicalDevice).graphicsFamily.value());
 		createFrameBuffers();
 
 		m_CommandPoolBuffer = new Command(device);
-		m_CommandPoolBuffer->CreateCommandPool(findQueueFamilies(physicalDevice).graphicsFamily.value(), device);
-		m_CommandPoolBuffer->CreateCommandBuffer(device);
+		m_CommandPoolBuffer->CreateCommandPool(findQueueFamilies(physicalDevice).graphicsFamily.value());
+		m_CommandPoolBuffer->CreateCommandBuffer();
 
 		//// week 03
 		//m_Pipeline.InitShader(device);
@@ -139,7 +139,7 @@ private:
 
 		m_Pipeline.DestroyPipeline(device);*/
 
-		m_SceneOne->CleanupItems(device);
+		m_SceneOne->CleanupItems();
 
 
 		vkDestroyRenderPass(device, m_renderPass, nullptr);

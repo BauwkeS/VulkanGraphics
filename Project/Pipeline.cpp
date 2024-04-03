@@ -19,10 +19,10 @@ void Pipeline::InitMesh(MeshFactory mesh)
 	m_Meshes.emplace_back((mesh));
 }
 
-void Pipeline::CreateGraphicsPipeline(VkDevice device)
+void Pipeline::CreateGraphicsPipeline()
 {
 
-	m_GradientShaderInfo->Initialize(device);
+	m_GradientShaderInfo->Initialize();
 
 	VkPipelineViewportStateCreateInfo viewportState{};
 	viewportState.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
@@ -73,7 +73,7 @@ void Pipeline::CreateGraphicsPipeline(VkDevice device)
 	pipelineLayoutInfo.setLayoutCount = 0;
 	pipelineLayoutInfo.pushConstantRangeCount = 0;
 
-	if (vkCreatePipelineLayout(device, &pipelineLayoutInfo, nullptr, &m_pipelineLayout) != VK_SUCCESS) {
+	if (vkCreatePipelineLayout(m_Device, &pipelineLayoutInfo, nullptr, &m_pipelineLayout) != VK_SUCCESS) {
 		throw std::runtime_error("failed to create pipeline layout!");
 	}
 
@@ -81,8 +81,8 @@ void Pipeline::CreateGraphicsPipeline(VkDevice device)
 
 	pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
 
-	auto vertexShaderStageInfo = m_GradientShaderInfo->createVertexShaderInfo(device);
-	auto fragmentShaderStageInfo = m_GradientShaderInfo->createFragmentShaderInfo(device);
+	auto vertexShaderStageInfo = m_GradientShaderInfo->createVertexShaderInfo();
+	auto fragmentShaderStageInfo = m_GradientShaderInfo->createFragmentShaderInfo();
 	VkPipelineShaderStageCreateInfo shaderStages[] = { vertexShaderStageInfo,
 														   fragmentShaderStageInfo };
 
@@ -107,7 +107,7 @@ void Pipeline::CreateGraphicsPipeline(VkDevice device)
 	pipelineInfo.subpass = 0;
 	pipelineInfo.basePipelineHandle = VK_NULL_HANDLE;
 
-	if (vkCreateGraphicsPipelines(device, VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &m_graphicsPipeline) != VK_SUCCESS) {
+	if (vkCreateGraphicsPipelines(m_Device, VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &m_graphicsPipeline) != VK_SUCCESS) {
 		throw std::runtime_error("failed to create graphics pipeline!");
 	}
 
@@ -164,9 +164,9 @@ void Pipeline::DrawFrame(VkCommandBuffer commandBuffer, const VkExtent2D& swapCh
 //	//}
 //}
 
-void Pipeline::DestroyPipeline(VkDevice device)
+void Pipeline::DestroyPipeline()
 {
-	vkDestroyPipeline(device,m_graphicsPipeline, nullptr);
-	vkDestroyPipelineLayout(device, m_pipelineLayout, nullptr);
+	vkDestroyPipeline(m_Device,m_graphicsPipeline, nullptr);
+	vkDestroyPipelineLayout(m_Device, m_pipelineLayout, nullptr);
 	//vkDestroyRenderPass(device, m_renderPass, nullptr);
 }

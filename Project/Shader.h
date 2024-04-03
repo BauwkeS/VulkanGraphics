@@ -9,27 +9,29 @@ class Shader
 public:
 	Shader(
 		const std::string& vertexShaderFile,
-		const std::string& fragmentShaderFile
+		const std::string& fragmentShaderFile, VkDevice device
 		) : m_VertexShaderFile{ vertexShaderFile },
-		m_FragmentShaderFile{ fragmentShaderFile }
+		m_FragmentShaderFile{ fragmentShaderFile },
+		m_Device{device}
 	{
 	}
 	~Shader() = default;
 	std::vector<VkPipelineShaderStageCreateInfo>& GetShaderStages() { return m_ShaderStages; }
 
-	void Initialize(const VkDevice& vkDevice);
-	void DetroyShaderModules(const VkDevice& vkDevice);
+	void Initialize();
+	void DetroyShaderModules();
 	
 	VkPipelineVertexInputStateCreateInfo createVertexInputStateInfo();
 	
 	VkPipelineInputAssemblyStateCreateInfo createInputAssemblyStateInfo();
-	VkPipelineShaderStageCreateInfo createFragmentShaderInfo(const VkDevice& vkDevice);
-	VkPipelineShaderStageCreateInfo createVertexShaderInfo(const VkDevice& vkDevice);
+	VkPipelineShaderStageCreateInfo createFragmentShaderInfo();
+	VkPipelineShaderStageCreateInfo createVertexShaderInfo();
 private:
-	VkShaderModule createShaderModule(const VkDevice& vkDevice, const std::vector<char>& code);
+	VkShaderModule createShaderModule(const std::vector<char>& code);
 
 	std::string m_VertexShaderFile;
 	std::string m_FragmentShaderFile;
+	VkDevice m_Device{};
 
 	std::vector<VkPipelineShaderStageCreateInfo> m_ShaderStages;
 

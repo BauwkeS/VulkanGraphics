@@ -1,15 +1,14 @@
 #include "Scene.h"
 
-void Scene::InitItems(VkDevice device, VkPhysicalDevice physicalDevice,
-	VkFormat swapChainImageFormat, VkExtent2D swapChainExtent,
+void Scene::InitItems(VkFormat swapChainImageFormat, VkExtent2D swapChainExtent,
 	std::vector<VkImageView> swapChainImageViews,
 	uint32_t queueFamilyIndicesGraphicsFamValue)
 {
 
-	m_pipeline = new Pipeline(m_RenderPass);
+	//m_pipeline = new Pipeline(m_Device,m_RenderPass);
 
-	MakeMeshes(device,physicalDevice);
-	m_pipeline->CreateGraphicsPipeline(device);
+	MakeMeshes();
+	m_pipeline->CreateGraphicsPipeline();
 	//m_MeshFactory2.CreateOval(0.0f, 0.0f, 0.2f, 100.0f);
 
 	// week 03
@@ -30,15 +29,15 @@ void Scene::InitItems(VkDevice device, VkPhysicalDevice physicalDevice,
 	//m_pipeline->InitCommandBuffer(device);
 }
 
-void Scene::MakeMeshes(VkDevice device, VkPhysicalDevice physicalDevice)
+void Scene::MakeMeshes()
 {
 	//MeshFactory::CreateQuad(0.5f, 0.2f, 0.5f, 0.7f)
 	MeshFactory mesh{ };
 	mesh.CreateQuad(0.5f, 0.2f, 0.5f, 0.7f);
-	mesh.CreateVertexBuffer(device, physicalDevice);
+	mesh.CreateVertexBuffer(m_Device, m_PhysicalDevice);
 	MeshFactory mesh2{ };
 	mesh2.CreateOval(0.0f, 0.0f, 0.2f, 100.0f);
-	mesh2.CreateVertexBuffer(device, physicalDevice);
+	mesh2.CreateVertexBuffer(m_Device, m_PhysicalDevice);
 	
 	m_meshes.push_back(mesh);
 	m_meshes.push_back(mesh2);
@@ -56,12 +55,12 @@ void Scene::PipelineDraw(VkCommandBuffer commandBuffer, const VkExtent2D& swapCh
 		swapChainFramebuffers, imageIndex);
 }
 
-void Scene::CleanupItems(VkDevice device)
+void Scene::CleanupItems()
 {
 	//m_MeshFactory.DestroyMesh(device);
 	for (auto& mesh : m_meshes) {
-		mesh.DestroyMesh(device);
+		mesh.DestroyMesh(m_Device);
 	}
 
-	m_pipeline->DestroyPipeline(device);
+	m_pipeline->DestroyPipeline();
 }

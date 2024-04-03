@@ -16,7 +16,7 @@ private:
 	//VkRenderPass m_renderPass;
 	//Command* m_commandInfo;
 
-	//VkDevice m_Device;
+	VkDevice m_Device;
 	VkPipeline m_graphicsPipeline{};
 	VkPipelineLayout m_pipelineLayout{};
 
@@ -33,14 +33,15 @@ public:
 		m_gradientShaderInfo{gradientShaderInfo},
 		m_pipelineLayout{},
 		m_graphicsPipeline{} {};*/
-	Pipeline(VkRenderPass renderPass)
-		: //m_Device{ device },
+	Pipeline(VkDevice device, VkRenderPass renderPass)
+		: m_Device{ device },
 		m_RenderPass{ renderPass }
 	{
 		//CreateGraphicsPipeline(device);
 		m_GradientShaderInfo = new Shader{
 		"shaders/shader.vert.spv",
-		"shaders/shader.frag.spv"
+		"shaders/shader.frag.spv",
+		m_Device
 		};
 	}
 	~Pipeline()=default;
@@ -60,12 +61,12 @@ public:
 	//void CreateFrameBuffers(std::vector<VkImageView> swapChainImageViews,
 	//	VkExtent2D swapChainExtent, VkDevice device);
 	//void CreateRenderPass(VkFormat swapChainImageFormat, VkDevice device);
-	void CreateGraphicsPipeline(VkDevice device);
+	void CreateGraphicsPipeline();
 
 	void DrawFrame(VkCommandBuffer commandBuffer, const VkExtent2D& swapChainExtent,
 		const std::vector<VkFramebuffer>& swapChainFramebuffers, uint32_t imageIndex);
 	/*void DrawFrameW6(uint32_t currentFrame, uint32_t imageIndex,
 		VkExtent2D swapChainExtent, std::vector<MeshFactory> meshes);*/
 
-	void DestroyPipeline(VkDevice device);
+	void DestroyPipeline();
 };

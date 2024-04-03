@@ -1,20 +1,19 @@
 #include "Command.h"
 #include "vulkanbase/VulkanBase.h"
 
-void Command::CreateCommandPool(uint32_t queueFamilyIndicesGraphicsFamValue,
-	VkDevice device)
+void Command::CreateCommandPool(uint32_t queueFamilyIndicesGraphicsFamValue)
 {
 	VkCommandPoolCreateInfo poolInfo{};
 	poolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
 	poolInfo.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
 	poolInfo.queueFamilyIndex = queueFamilyIndicesGraphicsFamValue;
 
-	if (vkCreateCommandPool(device, &poolInfo, nullptr, &m_commandPool) != VK_SUCCESS) {
+	if (vkCreateCommandPool(m_Device, &poolInfo, nullptr, &m_commandPool) != VK_SUCCESS) {
 		throw std::runtime_error("failed to create command pool!");
 	}
 }
 
-void Command::CreateCommandBuffer(VkDevice device)
+void Command::CreateCommandBuffer()
 {
 	/*commandBuffers.resize(MAX_FRAMES_IN_FLIGHT);
 
@@ -36,7 +35,7 @@ void Command::CreateCommandBuffer(VkDevice device)
 	allocInfo.commandBufferCount = 1;
 	
 
-	if (vkAllocateCommandBuffers(device, &allocInfo, &m_Buffer) != VK_SUCCESS)
+	if (vkAllocateCommandBuffers(m_Device, &allocInfo, &m_Buffer) != VK_SUCCESS)
 	{
 		throw std::runtime_error("failed to allocate command buffers!");
 	}
@@ -137,14 +136,14 @@ void Command::RecordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageI
 //	throw std::runtime_error("failed to find suitable memory type!");
 //}
 
-void Command::DestroyCommandPool(VkDevice device, std::vector<VkFramebuffer> swapChainFramebuffers)
+void Command::DestroyCommandPool(std::vector<VkFramebuffer> swapChainFramebuffers)
 {
-	vkFreeCommandBuffers(device, m_commandPool, 1, &m_Buffer);
+	vkFreeCommandBuffers(m_Device, m_commandPool, 1, &m_Buffer);
 	/*for (auto framebuffer : swapChainFramebuffers) {
 		vkDestroyFramebuffer(device, framebuffer, nullptr);
 	}*/
 
-	vkDestroyCommandPool(device, m_commandPool, nullptr);
+	vkDestroyCommandPool(m_Device, m_commandPool, nullptr);
 	/*vkDestroyBuffer(device, m_vertexBuffer, nullptr);
 	vkFreeMemory(device, m_vertexBufferMemory, nullptr);*/
 }
