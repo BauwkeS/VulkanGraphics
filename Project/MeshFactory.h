@@ -40,19 +40,29 @@ struct Vertex {
 class MeshFactory
 {
 private:
+	VkDevice m_MeshDevice{};
+	VkPhysicalDevice m_MeshPhysicalDevice{};
+
 	VkBuffer m_vertexBuffer;
 	VkDeviceMemory m_vertexBufferMemory;
+
 	std::vector<Vertex> vertices{};
 
-	uint32_t FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties, VkPhysicalDevice physicalDevice);
+	uint32_t FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
 
 
 public:
-	void DestroyMesh(VkDevice vkDevice);
-	void CreateVertexBuffer(VkDevice device, VkPhysicalDevice physicalDevice);
+	MeshFactory(VkDevice device, VkPhysicalDevice physicalDevice):
+		m_MeshDevice{device},
+		m_MeshPhysicalDevice{physicalDevice}
+	{};
+	
+	~MeshFactory() {}
+	void DestroyMesh();
+	void CreateVertexBuffer();
 	void Draw(VkCommandBuffer buffer);
 
-	VkBuffer GetVertextBuffer() { return m_vertexBuffer; }
+	VkBuffer GetVertextBuffer() const { return m_vertexBuffer; }
 
 	void CreateQuad(float top, float bottom, float left, float right);
 	void CreateOval(float x, float y, float radius, float numberOfSegments);

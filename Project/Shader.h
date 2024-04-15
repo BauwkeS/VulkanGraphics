@@ -15,11 +15,13 @@ public:
 		m_Device{device}
 	{
 	}
-	~Shader() = default;
-	std::vector<VkPipelineShaderStageCreateInfo>& GetShaderStages() { return m_ShaderStages; }
-
+	~Shader() {
+		vkDestroyShaderModule(m_Device, m_VertexInfo.module, nullptr);
+		vkDestroyShaderModule(m_Device, m_FragmentInfo.module, nullptr);
+	}
+	
 	void Initialize();
-	void DetroyShaderModules();
+	//void DetroyShaderModules();
 	
 	VkPipelineVertexInputStateCreateInfo createVertexInputStateInfo();
 	
@@ -33,7 +35,7 @@ private:
 	std::string m_FragmentShaderFile;
 	VkDevice m_Device{};
 
-	std::vector<VkPipelineShaderStageCreateInfo> m_ShaderStages;
+	VkPipelineShaderStageCreateInfo m_VertexInfo{}, m_FragmentInfo{};
 
 	std::array<VkVertexInputAttributeDescription, 2> m_AttributeDescriptors{};
 	VkVertexInputBindingDescription m_vertexInputBindingDescription{};

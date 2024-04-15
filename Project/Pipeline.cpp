@@ -3,20 +3,12 @@
 #include <MeshFactory.h>
 
 
-
-
-
-void Pipeline::DrawScene(VkCommandBuffer commandBuffer)
+void Pipeline::DrawScene(VkCommandBuffer commandBuffer, std::vector<MeshFactory> meshes)
 {
 	vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_graphicsPipeline);
 
-	for (auto&& mesh : m_Meshes)
+	for (auto&& mesh : meshes)
 		mesh.Draw(commandBuffer);
-}
-
-void Pipeline::InitMesh(MeshFactory mesh)
-{
-	m_Meshes.emplace_back((mesh));
 }
 
 void Pipeline::CreateGraphicsPipeline()
@@ -110,12 +102,10 @@ void Pipeline::CreateGraphicsPipeline()
 	if (vkCreateGraphicsPipelines(m_Device, VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &m_graphicsPipeline) != VK_SUCCESS) {
 		throw std::runtime_error("failed to create graphics pipeline!");
 	}
-
-	//m_GradientShaderInfo->DetroyShaderModules(device);
 }
 
 void Pipeline::DrawFrame(VkCommandBuffer commandBuffer, const VkExtent2D& swapChainExtent,
-	const std::vector<VkFramebuffer>& swapChainFramebuffers, uint32_t imageIndex)
+	const std::vector<VkFramebuffer>& swapChainFramebuffers, uint32_t imageIndex, std::vector<MeshFactory> meshes)
 {
 	VkRenderPassBeginInfo renderPassInfo{};
 	renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
@@ -148,25 +138,14 @@ void Pipeline::DrawFrame(VkCommandBuffer commandBuffer, const VkExtent2D& swapCh
 
 	//drawScene();
 	//vkCmdDraw(commandBuffer, 6, 1, 0, 0);
-	DrawScene(commandBuffer);
+	DrawScene(commandBuffer, meshes);
 
 	vkCmdEndRenderPass(commandBuffer);
 }
 
-//void Pipeline::DrawFrame(VkCommandBuffer commandBuffer, const VkExtent2D& swapChainExtent,
-//	const std::vector<VkFramebuffer>& swapChainFramebuffers, uint32_t imageIndex, std::vector<MeshFactory> meshes)
+//void Pipeline::DestroyPipeline()
 //{
-//	//for (auto& mesh : meshes) {
-//	//	vkResetCommandBuffer(m_commandInfo->GetCommandBuffers()[currentFrame], /*VkCommandBufferResetFlagBits*/ 0);
-//	//	m_commandInfo->RecordCommandBuffer(m_commandInfo->GetCommandBuffers()[currentFrame], imageIndex, m_renderPass, swapChainExtent, m_graphicsPipeline, m_swapChainFramebuffers,
-//	//		mesh);
-//
-//	//}
+//	vkDestroyPipeline(m_Device,m_graphicsPipeline, nullptr);
+//	vkDestroyPipelineLayout(m_Device, m_pipelineLayout, nullptr);
+//	//vkDestroyRenderPass(device, m_renderPass, nullptr);
 //}
-
-void Pipeline::DestroyPipeline()
-{
-	vkDestroyPipeline(m_Device,m_graphicsPipeline, nullptr);
-	vkDestroyPipelineLayout(m_Device, m_pipelineLayout, nullptr);
-	//vkDestroyRenderPass(device, m_renderPass, nullptr);
-}

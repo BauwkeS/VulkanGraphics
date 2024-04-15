@@ -6,20 +6,20 @@
 
 void Shader::Initialize()
 {
-	m_ShaderStages.push_back(createVertexShaderInfo());
-	m_ShaderStages.push_back(createFragmentShaderInfo());
+	createVertexShaderInfo();
+	createFragmentShaderInfo();
 
 	m_vertexInputBindingDescription = Vertex::getBindingDescription();
 	m_AttributeDescriptors = Vertex::getAttributeDescriptions();
 }
 
-void Shader::DetroyShaderModules()
-{
-	for (VkPipelineShaderStageCreateInfo& stageInfo : m_ShaderStages) {
-		vkDestroyShaderModule(m_Device, stageInfo.module, nullptr);
-	}
-	m_ShaderStages.clear();
-}
+//void Shader::DetroyShaderModules()
+//{
+//	for (VkPipelineShaderStageCreateInfo& stageInfo : m_ShaderStages) {
+//		vkDestroyShaderModule(m_Device, stageInfo.module, nullptr);
+//	}
+//	m_ShaderStages.clear();
+//}
 
 VkPipelineShaderStageCreateInfo Shader::createFragmentShaderInfo() {
 	std::vector<char> fragShaderCode = readFile(m_FragmentShaderFile);
@@ -30,7 +30,7 @@ VkPipelineShaderStageCreateInfo Shader::createFragmentShaderInfo() {
 	fragShaderStageInfo.stage = VK_SHADER_STAGE_FRAGMENT_BIT;
 	fragShaderStageInfo.module = fragShaderModule;
 	fragShaderStageInfo.pName = "main";
-
+	m_FragmentInfo = fragShaderStageInfo;
 	return fragShaderStageInfo;
 }
 
@@ -43,6 +43,7 @@ VkPipelineShaderStageCreateInfo Shader::createVertexShaderInfo() {
 	vertShaderStageInfo.stage = VK_SHADER_STAGE_VERTEX_BIT;
 	vertShaderStageInfo.module = vertShaderModule;
 	vertShaderStageInfo.pName = "main";
+	m_VertexInfo = vertShaderStageInfo;
 	return vertShaderStageInfo;
 }
 
@@ -50,18 +51,11 @@ VkPipelineVertexInputStateCreateInfo Shader::createVertexInputStateInfo()
 {
 	VkPipelineVertexInputStateCreateInfo vertexInputInfo{};
 	vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
-	
-	//auto bindingDescription = Vertex::getBindingDescription();
-	//auto attributeDescriptions = Vertex::getAttributeDescriptions();
 
 	vertexInputInfo.vertexBindingDescriptionCount = 1;
 	vertexInputInfo.vertexAttributeDescriptionCount = static_cast<uint32_t>(m_AttributeDescriptors.size());
 	vertexInputInfo.pVertexBindingDescriptions = &m_vertexInputBindingDescription;
 	vertexInputInfo.pVertexAttributeDescriptions = m_AttributeDescriptors.data();
-
-	//vertexInputInfo.vertexBindingDescriptionCount = static_cast<uint_32_t>(m_VertexInputAttributeDescription);
-	//vertexInputInfo.pVertexBindingDescriptions = &m_vertexInputBindingDescription;
-	//vertexInputInfo.vertexAttributeDescriptions = m_VertexInputAttributeDescriptors.data();
 
 	return vertexInputInfo;
 }

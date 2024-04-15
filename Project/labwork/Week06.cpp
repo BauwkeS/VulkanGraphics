@@ -47,7 +47,6 @@ void VulkanBase::drawFrame() {
 	vkResetCommandBuffer(commandBuffer, 0);
 	m_CommandPoolBuffer->BufferStart();
 
-	//m_Pipeline.DrawFrameW6(currentFrame, imageIndex, swapChainExtent, m_MeshFactory);
 	m_SceneOne->PipelineDraw(commandBuffer, swapChainExtent,
 		m_swapChainFramebuffers, imageIndex);
 

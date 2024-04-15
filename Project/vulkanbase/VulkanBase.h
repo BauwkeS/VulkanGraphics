@@ -139,7 +139,7 @@ private:
 
 		m_Pipeline.DestroyPipeline(device);*/
 
-		m_SceneOne->CleanupItems();
+		//m_SceneOne->CleanupItems();
 
 
 		vkDestroyRenderPass(device, m_renderPass, nullptr);
@@ -150,6 +150,11 @@ private:
 		for (auto imageView : swapChainImageViews) {
 			vkDestroyImageView(device, imageView, nullptr);
 		}
+
+		delete m_CommandPoolBuffer;
+		delete m_Pipeline;
+		delete m_SceneOne;
+		//eyo framebuffer is an issue here
 
 		if (enableValidationLayers) {
 			DestroyDebugUtilsMessengerEXT(instance, debugMessenger, nullptr);
