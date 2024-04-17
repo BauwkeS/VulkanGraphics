@@ -3,6 +3,7 @@
 
 #include <glm/glm.hpp>
 #include <vulkan/vulkan_core.h>
+#include <vulkanbase/VulkanBase.h>
 #include <vector>
 #include <string>
 #include <array>
@@ -60,6 +61,7 @@ public:
 	~MeshFactory() {}
 	void DestroyMesh();
 	void CreateVertexBuffer();
+	void CreateUniformBuffers();
 	void Draw(VkCommandBuffer buffer);
 
 	VkBuffer GetVertextBuffer() const { return m_vertexBuffer; }
