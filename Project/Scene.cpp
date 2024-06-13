@@ -1,4 +1,20 @@
 #include "Scene.h"
+#include "Globals.h"
+
+Scene::Scene()
+{
+	m_pipeline = new Pipeline(Globals::renderPass());
+	m_pipeline2 = new Pipeline(Globals::renderPass());
+	MakeMeshes();
+}
+
+Scene::~Scene()
+{
+	for (auto& mesh : m_meshes) {
+		mesh.DestroyMesh();
+	}
+	vkDestroyRenderPass(Globals::device(), Globals::renderPass(), nullptr);
+}
 
 void Scene::InitItems()
 {
@@ -34,7 +50,7 @@ void Scene::PipelineDraw(VkCommandBuffer commandBuffer,
 
 	VkRenderPassBeginInfo renderPassInfo{};
 	renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-	renderPassInfo.renderPass = m_RenderPass;
+	renderPassInfo.renderPass = Globals::renderPass();
 	renderPassInfo.framebuffer = swapChainFramebuffers[imageIndex];
 	renderPassInfo.renderArea.offset = { 0, 0 };
 	renderPassInfo.renderArea.extent = Globals::swapChainExtent();

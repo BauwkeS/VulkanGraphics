@@ -8,7 +8,7 @@ private:
     // thanks mat for the help:)
     static inline VkDevice s_Device{};
     static inline VkPhysicalDevice s_PhysicalDevice{};
-    //static inline RenderPass* s_pRenderPass{};
+    static inline VkRenderPass s_RenderPass{};
    // static inline Swapchain* s_pSwapchain{};
     static inline VkExtent2D s_SwapChainExtent{};
    /* static inline VkQueue s_GraphicsQueue{};
@@ -23,7 +23,7 @@ private:
 public:
     [[nodiscard]] static auto device() { return s_Device; }
     [[nodiscard]] static auto physicalDevice() { return s_PhysicalDevice; }
-    // [[nodiscard]] static auto pRenderPass() { return s_pRenderPass; }
+	[[nodiscard]] static auto renderPass() { return s_RenderPass; }
    //  [[nodiscard]] static auto pSwapchain() { return s_pSwapchain; }
     [[nodiscard]] static auto swapChainExtent() { return s_SwapChainExtent; }
     //[[nodiscard]] static auto graphicsQueue() { return s_GraphicsQueue; }

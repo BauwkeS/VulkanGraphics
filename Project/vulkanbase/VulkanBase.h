@@ -93,8 +93,7 @@ private:
 		
 		createRenderPass();
 
-		m_Pipeline = new Pipeline(m_renderPass);
-		m_SceneOne = new Scene(m_Pipeline, m_renderPass);
+		m_SceneOne = new Scene();
 
 		m_SceneOne->InitItems();
 		createFrameBuffers();
@@ -141,7 +140,7 @@ private:
 		//m_SceneOne->CleanupItems();
 
 
-		vkDestroyRenderPass(device, m_renderPass, nullptr);
+		//vkDestroyRenderPass(device, m_renderPass, nullptr);
 		//m_CommandPoolBuffer.DestroyCommandPool(device, m_swapChainFramebuffers);
 
 
@@ -151,7 +150,6 @@ private:
 		}
 
 		delete m_CommandPoolBuffer;
-		delete m_Pipeline;
 		delete m_SceneOne;
 		//eyo framebuffer is an issue here
 
@@ -194,7 +192,7 @@ private:
 
 	std::vector<VkFramebuffer> m_swapChainFramebuffers;
 
-	VkRenderPass m_renderPass;
+	//VkRenderPass m_renderPass;
 
 	// Week 04
 	// Swap chain and image view support
@@ -251,7 +249,6 @@ private:
 	}
 
 	Command* m_CommandPoolBuffer{};
-	Pipeline* m_Pipeline{ };
 	
 	Scene* m_SceneOne{};
 	void createRenderPass();

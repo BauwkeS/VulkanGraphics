@@ -9,19 +9,8 @@
 class Scene
 {
 public:
-	Scene(Pipeline* pipeline, VkRenderPass renderPass
-	) :
-		m_pipeline{pipeline},
-		m_RenderPass{ renderPass }
-		{
-		m_pipeline2 = new Pipeline(renderPass);
-		MakeMeshes();
-	}
-	~Scene() {
-		for (auto& mesh : m_meshes) {
-			mesh.DestroyMesh();
-		}
-	}
+	Scene();
+	~Scene();
 
 	void InitItems();
 	void MakeMeshes();
@@ -32,7 +21,6 @@ public:
 private:
 	Pipeline* m_pipeline;
 	Pipeline* m_pipeline2;
-	VkRenderPass m_RenderPass{};
 	std::vector<MeshFactory> m_meshes{};
 	std::vector<MeshFactory> m_meshes2{};
 	MeshFactory mesh{  };
