@@ -1,11 +1,10 @@
-#include "Pipeline.h"
+#include "Pipeline3D.h"
+#include "Globals.h"
 #include <stdexcept>
 #include <MeshFactory.h>
 
-#include "Globals.h"
 
-
-void Pipeline::DrawScene(VkCommandBuffer commandBuffer, std::vector<MeshFactory> meshes)
+void Pipeline3D::DrawScene(VkCommandBuffer commandBuffer, std::vector<MeshFactory> meshes)
 {
 	vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_graphicsPipeline);
 
@@ -32,14 +31,14 @@ void Pipeline::DrawScene(VkCommandBuffer commandBuffer, std::vector<MeshFactory>
 	}
 }
 
-Pipeline::~Pipeline()
+Pipeline3D::~Pipeline3D()
 {
 	vkDestroyPipeline(Globals::device(), m_graphicsPipeline, nullptr);
 	vkDestroyPipelineLayout(Globals::device(), m_pipelineLayout, nullptr);
 
 }
 
-void Pipeline::CreateGraphicsPipeline()
+void Pipeline3D::CreateGraphicsPipeline()
 {
 
 	m_GradientShaderInfo->Initialize();
@@ -132,7 +131,7 @@ void Pipeline::CreateGraphicsPipeline()
 	}
 }
 
-void Pipeline::DrawFrame(VkCommandBuffer commandBuffer, std::vector<MeshFactory> meshes)
+void Pipeline3D::DrawFrame(VkCommandBuffer commandBuffer, std::vector<MeshFactory> meshes)
 {
 
 	vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_graphicsPipeline);

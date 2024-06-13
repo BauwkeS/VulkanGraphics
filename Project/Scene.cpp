@@ -3,8 +3,8 @@
 
 Scene::Scene()
 {
-	m_pipeline = new Pipeline(Globals::renderPass());
-	m_pipeline2 = new Pipeline(Globals::renderPass());
+	m_pipeline = new Pipeline();
+	m_pipeline2 = new Pipeline3D();
 	MakeMeshes();
 }
 

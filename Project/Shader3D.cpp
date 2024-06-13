@@ -9,7 +9,7 @@ Shader3D::~Shader3D()
 {
 	vkDestroyShaderModule(Globals::device(), m_VertexInfo.module, nullptr);
 	vkDestroyShaderModule(Globals::device(), m_FragmentInfo.module, nullptr);
-
+	vkDestroyDescriptorSetLayout(Globals::device(), m_DescriptorSetLayout, nullptr);
 }
 
 void Shader3D::Initialize()

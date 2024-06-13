@@ -5,9 +5,7 @@ class Buffer
 {
 public:
     Buffer(VkDeviceSize size, VkBufferUsageFlags usage,
-        VkMemoryPropertyFlags properties):
-        m_Size{size}
-	{}
+        VkMemoryPropertyFlags properties);
     ~Buffer()=default;
 
     Buffer(Buffer&& other) = delete;

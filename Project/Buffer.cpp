@@ -2,8 +2,43 @@
 #include "Buffer.h"
 #include "Globals.h"
 
+Buffer::Buffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties)
+    :m_Size{ size }
+{
+    VkBufferCreateInfo bufferInfo{};
+    bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
+    bufferInfo.size = size;
+    bufferInfo.usage = usage;
+    bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+
+    if (vkCreateBuffer(Globals::device(), &bufferInfo, nullptr, &m_Buffer) != VK_SUCCESS)
+    {
+        throw std::runtime_error("Failed to create buffer");
+    }
+
+    VkMemoryRequirements memoryRequirements{};
+    vkGetBufferMemoryRequirements(Globals::device(), m_Buffer, &memoryRequirements);
+
+    VkMemoryAllocateInfo allocInfo{};
+    allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+    allocInfo.allocationSize = memoryRequirements.size;
+    allocInfo.memoryTypeIndex = FindMemoryType(memoryRequirements.memoryTypeBits,properties);
+
+    if (vkAllocateMemory(Globals::device(), &allocInfo, nullptr, &m_BufferMemory)
+        != VK_SUCCESS)
+    {
+        throw std::runtime_error("Failed to allocate buffer memory");
+    }
+
+    vkBindBufferMemory(Globals::device(), m_Buffer, m_BufferMemory, 0);
+}
+
 void Buffer::Upload(VkDeviceSize size, void* data)
 {
+    void* info;
+    vkMapMemory(Globals::device(), m_BufferMemory, 0, size, 0, &info);
+    memcpy(info, data, size);
+    vkUnmapMemory(Globals::device(), m_BufferMemory);
 }
 
 void Buffer::Map(VkDeviceSize size, void* data)

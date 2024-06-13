@@ -5,6 +5,7 @@
 #include <array>
 #include <MeshFactory.h>
 #include <Pipeline.h>
+#include <Pipeline3D.h>
 
 class Scene
 {
@@ -20,7 +21,7 @@ public:
 
 private:
 	Pipeline* m_pipeline;
-	Pipeline* m_pipeline2;
+	Pipeline3D* m_pipeline2;
 	std::vector<MeshFactory> m_meshes{};
 	std::vector<MeshFactory> m_meshes2{};
 	MeshFactory mesh{  };
