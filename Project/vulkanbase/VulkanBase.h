@@ -96,8 +96,7 @@ private:
 		m_Pipeline = new Pipeline(m_renderPass);
 		m_SceneOne = new Scene(m_Pipeline, m_renderPass);
 
-		m_SceneOne->InitItems(swapChainImageFormat,
-			swapChainExtent, swapChainImageViews, findQueueFamilies(physicalDevice).graphicsFamily.value());
+		m_SceneOne->InitItems();
 		createFrameBuffers();
 
 		m_CommandPoolBuffer = new Command();

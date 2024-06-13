@@ -14,6 +14,7 @@ public:
 		m_pipeline{pipeline},
 		m_RenderPass{ renderPass }
 		{
+		m_pipeline2 = new Pipeline(renderPass);
 		MakeMeshes();
 	}
 	~Scene() {
@@ -22,9 +23,7 @@ public:
 		}
 	}
 
-	void InitItems(VkFormat swapChainImageFormat, VkExtent2D swapChainExtent,
-		std::vector<VkImageView> swapChainImageViews,
-		uint32_t queueFamilyIndicesGraphicsFamValue);
+	void InitItems();
 	void MakeMeshes();
 	void PipelineDraw(VkCommandBuffer commandBuffer,
 		const std::vector<VkFramebuffer>& swapChainFramebuffers, uint32_t imageIndex);
@@ -32,8 +31,11 @@ public:
 
 private:
 	Pipeline* m_pipeline;
+	Pipeline* m_pipeline2;
 	VkRenderPass m_RenderPass{};
 	std::vector<MeshFactory> m_meshes{};
+	std::vector<MeshFactory> m_meshes2{};
 	MeshFactory mesh{  };
 	MeshFactory mesh2{  };
+	MeshFactory mesh3{  };
 };

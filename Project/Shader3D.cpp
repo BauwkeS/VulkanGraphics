@@ -1,26 +1,31 @@
-#include "Shader.h"
+#pragma once
+#include "Shader3D.h"
 #include "Globals.h"
-
 #include <vulkanbase/VulkanUtil.h>
 #include <vulkanbase/VulkanBase.h>
 
 
-void Shader::Initialize()
-{
-	createVertexShaderInfo();
-	createFragmentShaderInfo();
-
-	m_vertexInputBindingDescription = Vertex::getBindingDescription();
-	m_AttributeDescriptors = Vertex::getAttributeDescriptions();
-}
-
-Shader::~Shader()
+Shader3D::~Shader3D()
 {
 	vkDestroyShaderModule(Globals::device(), m_VertexInfo.module, nullptr);
 	vkDestroyShaderModule(Globals::device(), m_FragmentInfo.module, nullptr);
 
 }
 
+void Shader3D::Initialize()
+{
+	m_UBOBuffer = std::make_unique<Buffer>(
+		VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
+		VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+		sizeof(VertexUBO));
+
+	createVertexShaderInfo();
+	createFragmentShaderInfo();
+	CreateDescriptorSetLayout();
+
+	m_vertexInputBindingDescription = Vertex::getBindingDescription();
+	m_AttributeDescriptors = Vertex::getAttributeDescriptions();
+}
 
 //void Shader::DetroyShaderModules()
 //{
@@ -30,7 +35,7 @@ Shader::~Shader()
 //	m_ShaderStages.clear();
 //}
 
-VkPipelineShaderStageCreateInfo Shader::createFragmentShaderInfo() {
+VkPipelineShaderStageCreateInfo Shader3D::createFragmentShaderInfo() {
 	std::vector<char> fragShaderCode = readFile(m_FragmentShaderFile);
 	VkShaderModule fragShaderModule = createShaderModule(fragShaderCode);
 
@@ -43,7 +48,7 @@ VkPipelineShaderStageCreateInfo Shader::createFragmentShaderInfo() {
 	return fragShaderStageInfo;
 }
 
-VkPipelineShaderStageCreateInfo Shader::createVertexShaderInfo() {
+VkPipelineShaderStageCreateInfo Shader3D::createVertexShaderInfo() {
 	std::vector<char> vertShaderCode = readFile(m_VertexShaderFile);
 	VkShaderModule vertShaderModule = createShaderModule(vertShaderCode);
 
@@ -56,7 +61,7 @@ VkPipelineShaderStageCreateInfo Shader::createVertexShaderInfo() {
 	return vertShaderStageInfo;
 }
 
-VkPipelineVertexInputStateCreateInfo Shader::createVertexInputStateInfo()
+VkPipelineVertexInputStateCreateInfo Shader3D::createVertexInputStateInfo()
 {
 	VkPipelineVertexInputStateCreateInfo vertexInputInfo{};
 	vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
@@ -69,7 +74,7 @@ VkPipelineVertexInputStateCreateInfo Shader::createVertexInputStateInfo()
 	return vertexInputInfo;
 }
 
-VkPipelineInputAssemblyStateCreateInfo Shader::createInputAssemblyStateInfo()
+VkPipelineInputAssemblyStateCreateInfo Shader3D::createInputAssemblyStateInfo()
 {
 	VkPipelineInputAssemblyStateCreateInfo inputAssembly{};
 	inputAssembly.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
@@ -78,7 +83,7 @@ VkPipelineInputAssemblyStateCreateInfo Shader::createInputAssemblyStateInfo()
 	return inputAssembly;
 }
 
-VkShaderModule Shader::createShaderModule(const std::vector<char>& code) {
+VkShaderModule Shader3D::createShaderModule(const std::vector<char>& code) {
 	VkShaderModuleCreateInfo createInfo{};
 	createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
 	createInfo.codeSize = code.size();
@@ -90,4 +95,25 @@ VkShaderModule Shader::createShaderModule(const std::vector<char>& code) {
 	}
 
 	return shaderModule;
+}
+
+void Shader3D::CreateDescriptorSetLayout()
+{
+	VkDescriptorSetLayoutBinding uboLayoutBinding{};
+	uboLayoutBinding.binding = 0;
+	uboLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+	uboLayoutBinding.descriptorCount = 1;
+	uboLayoutBinding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
+	uboLayoutBinding.pImmutableSamplers = nullptr; // Optional
+
+	VkDescriptorSetLayoutCreateInfo layoutInfo{};
+	layoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+	layoutInfo.bindingCount = 1;
+	layoutInfo.pBindings = &uboLayoutBinding;
+
+	if (vkCreateDescriptorSetLayout(Globals::device(), &layoutInfo, nullptr, &
+		m_DescriptorSetLayout) != VK_SUCCESS) {
+		 throw std::runtime_error("failed to create descriptor set layout!");
+	}
+
 }

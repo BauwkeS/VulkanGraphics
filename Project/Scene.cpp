@@ -1,10 +1,9 @@
 #include "Scene.h"
 
-void Scene::InitItems(VkFormat swapChainImageFormat, VkExtent2D swapChainExtent,
-	std::vector<VkImageView> swapChainImageViews,
-	uint32_t queueFamilyIndicesGraphicsFamValue)
+void Scene::InitItems()
 {
 	m_pipeline->CreateGraphicsPipeline();
+	m_pipeline2->CreateGraphicsPipeline();
 }
 
 void Scene::MakeMeshes()
@@ -13,9 +12,13 @@ void Scene::MakeMeshes()
 	mesh.CreateVertexBuffer();
 	mesh2.CreateOval(0.0f, 0.0f, 0.2f, 100.0f);
 	mesh2.CreateVertexBuffer();
+
+	mesh3.CreateQuad(-0.2f, -0.7f, 0.2f, 0.5f);
+	mesh3.CreateVertexBuffer();
 	
 	m_meshes.push_back(mesh);
 	m_meshes.push_back(mesh2);
+	m_meshes2.push_back(mesh3);
 }
 
 void Scene::PipelineDraw(VkCommandBuffer commandBuffer,
@@ -43,6 +46,7 @@ void Scene::PipelineDraw(VkCommandBuffer commandBuffer,
 	vkCmdBeginRenderPass(commandBuffer, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 
 	m_pipeline->DrawFrame(commandBuffer,m_meshes);
+	m_pipeline2->DrawFrame(commandBuffer,m_meshes2);
 
 	vkCmdEndRenderPass(commandBuffer);
 }

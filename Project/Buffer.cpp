@@ -1,5 +1,5 @@
+#pragma once
 #include "Buffer.h"
-
 #include "Globals.h"
 
 void Buffer::Upload(VkDeviceSize size, void* data)

@@ -1,5 +1,4 @@
 #pragma once
-#include <stdexcept>
 #include <vulkan/vulkan_core.h>
 
 class Buffer
@@ -9,7 +8,7 @@ public:
         VkMemoryPropertyFlags properties):
         m_Size{size}
 	{}
-    ~Buffer();
+    ~Buffer()=default;
 
     Buffer(Buffer&& other) = delete;
     Buffer(const Buffer& other) = delete;
