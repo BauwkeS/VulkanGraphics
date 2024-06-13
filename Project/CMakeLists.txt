@@ -35,7 +35,7 @@ set(SOURCES
     "labwork/Week04.cpp" 
     "labwork/Week05.cpp"
     "labwork/Week06.cpp"
- "Shader.h" "Shader.cpp" "Command.h" "Command.cpp" "Pipeline.h" "Pipeline.cpp" "MeshFactory.h" "MeshFactory.cpp" "Scene.h" "Scene.cpp" "Globals.h" "Globals.cpp")
+ "Shader.h" "Shader.cpp" "Command.h" "Command.cpp" "Pipeline.h" "Pipeline.cpp" "MeshFactory.h" "MeshFactory.cpp" "Scene.h" "Scene.cpp" "Globals.h" "Globals.cpp" "Buffer.h" "Buffer.cpp" "Mesh3D.h" "Mesh3D.cpp")
 
 # Create the executable
 add_executable(${PROJECT_NAME} ${SOURCES} ${GLSL_SOURCE_FILES}  "vulkanbase/VulkanUtil.cpp" "labwork/Week03.cpp")
