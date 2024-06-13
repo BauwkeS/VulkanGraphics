@@ -1,3 +1,4 @@
+#include "Globals.h"
 #include "vulkanbase/VulkanBase.h"
 
 void VulkanBase::pickPhysicalDevice() {
@@ -18,6 +19,7 @@ void VulkanBase::pickPhysicalDevice() {
 	for (const auto& device : devices) {
 		if (isDeviceSuitable(device)) {
 			physicalDevice = device;
+			Globals::s_PhysicalDevice = device;
 			break;
 		}
 	}
@@ -79,6 +81,8 @@ void VulkanBase::createLogicalDevice() {
 	if (vkCreateDevice(physicalDevice, &createInfo, nullptr, &device) != VK_SUCCESS) {
 		throw std::runtime_error("failed to create logical device!");
 	}
+
+	Globals::s_Device = device;
 
 	vkGetDeviceQueue(device, indices.graphicsFamily.value(), 0, &graphicsQueue);
 	vkGetDeviceQueue(device, indices.presentFamily.value(), 0, &presentQueue);

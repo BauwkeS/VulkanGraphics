@@ -93,14 +93,14 @@ private:
 		
 		createRenderPass();
 
-		m_Pipeline = new Pipeline(device,m_renderPass);
-		m_SceneOne = new Scene(device,physicalDevice, m_Pipeline, m_renderPass);
+		m_Pipeline = new Pipeline(m_renderPass);
+		m_SceneOne = new Scene(m_Pipeline, m_renderPass);
 
 		m_SceneOne->InitItems(swapChainImageFormat,
 			swapChainExtent, swapChainImageViews, findQueueFamilies(physicalDevice).graphicsFamily.value());
 		createFrameBuffers();
 
-		m_CommandPoolBuffer = new Command(device);
+		m_CommandPoolBuffer = new Command();
 		m_CommandPoolBuffer->CreateCommandPool(findQueueFamilies(physicalDevice).graphicsFamily.value());
 		m_CommandPoolBuffer->CreateCommandBuffer();
 

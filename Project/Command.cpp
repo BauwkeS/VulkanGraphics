@@ -1,11 +1,12 @@
 #include "Command.h"
+#include "Globals.h"
 #include "vulkanbase/VulkanBase.h"
 
 Command::~Command()
 {
-	vkFreeCommandBuffers(m_Device, m_commandPool, 1, &m_Buffer);
+	vkFreeCommandBuffers(Globals::device(), m_commandPool, 1, &m_Buffer);
 
-	vkDestroyCommandPool(m_Device, m_commandPool, nullptr);
+	vkDestroyCommandPool(Globals::device(), m_commandPool, nullptr);
 }
 
 void Command::CreateCommandPool(uint32_t queueFamilyIndicesGraphicsFamValue)
@@ -15,7 +16,7 @@ void Command::CreateCommandPool(uint32_t queueFamilyIndicesGraphicsFamValue)
 	poolInfo.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
 	poolInfo.queueFamilyIndex = queueFamilyIndicesGraphicsFamValue;
 
-	if (vkCreateCommandPool(m_Device, &poolInfo, nullptr, &m_commandPool) != VK_SUCCESS) {
+	if (vkCreateCommandPool(Globals::device(), &poolInfo, nullptr, &m_commandPool) != VK_SUCCESS) {
 		throw std::runtime_error("failed to create command pool!");
 	}
 }
@@ -30,7 +31,7 @@ void Command::CreateCommandBuffer()
 	allocInfo.commandBufferCount = 1;
 	
 
-	if (vkAllocateCommandBuffers(m_Device, &allocInfo, &m_Buffer) != VK_SUCCESS)
+	if (vkAllocateCommandBuffers(Globals::device(), &allocInfo, &m_Buffer) != VK_SUCCESS)
 	{
 		throw std::runtime_error("failed to allocate command buffers!");
 	}
@@ -80,18 +81,20 @@ void Command::RecordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageI
 
 void Command::DestroyCommandPool(std::vector<VkFramebuffer> swapChainFramebuffers)
 {
-	vkFreeCommandBuffers(m_Device, m_commandPool, 1, &m_Buffer);
+	vkFreeCommandBuffers(Globals::device(), m_commandPool, 1, &m_Buffer);
 	/*for (auto framebuffer : swapChainFramebuffers) {
 		vkDestroyFramebuffer(device, framebuffer, nullptr);
 	}*/
 
-	vkDestroyCommandPool(m_Device, m_commandPool, nullptr);
+	vkDestroyCommandPool(Globals::device(), m_commandPool, nullptr);
 	/*vkDestroyBuffer(device, m_vertexBuffer, nullptr);
 	vkFreeMemory(device, m_vertexBufferMemory, nullptr);*/
 }
 
 void Command::BufferStart()
 {
+	vkResetCommandBuffer(m_Buffer, 0);
+
 	VkCommandBufferBeginInfo beginInfo{};
 	beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 

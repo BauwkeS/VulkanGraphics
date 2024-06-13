@@ -7,10 +7,11 @@
 #include <Command.h>
 #include <Shader.h>
 
+#include "Globals.h"
+
 class Pipeline
 {
 private:
-	VkDevice m_Device;
 	VkPipeline m_graphicsPipeline{};
 	VkPipelineLayout m_pipelineLayout{};
 
@@ -20,23 +21,20 @@ private:
 	void DrawScene(VkCommandBuffer commandBuf, std::vector<MeshFactory> m_Meshes);
 
 public:
-	Pipeline(VkDevice device, VkRenderPass renderPass)
-		: m_Device{ device },
+	Pipeline(VkRenderPass renderPass)
+		:
 		m_RenderPass{ renderPass }
 	{
 		m_GradientShaderInfo = new Shader{
 		"shaders/shader.vert.spv",
-		"shaders/shader.frag.spv",
-		m_Device
+		"shaders/shader.frag.spv"
 		};
 	}
 	~Pipeline() {
-		vkDestroyPipeline(m_Device, m_graphicsPipeline, nullptr);
-		vkDestroyPipelineLayout(m_Device, m_pipelineLayout, nullptr);
+		vkDestroyPipeline(Globals::device(), m_graphicsPipeline, nullptr);
+		vkDestroyPipelineLayout(Globals::device(), m_pipelineLayout, nullptr);
 	}
 	void CreateGraphicsPipeline();
 
-	void DrawFrame(VkCommandBuffer commandBuffer, const VkExtent2D& swapChainExtent,
-		const std::vector<VkFramebuffer>& swapChainFramebuffers, uint32_t imageIndex,
-		std::vector<MeshFactory> meshes);
+	void DrawFrame(VkCommandBuffer commandBuffer,std::vector<MeshFactory> meshes);
 };

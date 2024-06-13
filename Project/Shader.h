@@ -4,20 +4,21 @@
 #include <string>
 #include <array>
 
+#include "Globals.h"
+
 class Shader
 {
 public:
 	Shader(
 		const std::string& vertexShaderFile,
-		const std::string& fragmentShaderFile, VkDevice device
+		const std::string& fragmentShaderFile
 		) : m_VertexShaderFile{ vertexShaderFile },
-		m_FragmentShaderFile{ fragmentShaderFile },
-		m_Device{device}
+		m_FragmentShaderFile{ fragmentShaderFile }
 	{
 	}
 	~Shader() {
-		vkDestroyShaderModule(m_Device, m_VertexInfo.module, nullptr);
-		vkDestroyShaderModule(m_Device, m_FragmentInfo.module, nullptr);
+		vkDestroyShaderModule(Globals::device(), m_VertexInfo.module, nullptr);
+		vkDestroyShaderModule(Globals::device(), m_FragmentInfo.module, nullptr);
 	}
 	
 	void Initialize();
@@ -33,7 +34,6 @@ private:
 
 	std::string m_VertexShaderFile;
 	std::string m_FragmentShaderFile;
-	VkDevice m_Device{};
 
 	VkPipelineShaderStageCreateInfo m_VertexInfo{}, m_FragmentInfo{};
 

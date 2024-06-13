@@ -43,14 +43,20 @@ void VulkanBase::drawFrame() {
 	uint32_t imageIndex;
 	vkAcquireNextImageKHR(device, swapChain, UINT64_MAX, imageAvailableSemaphore, VK_NULL_HANDLE, &imageIndex);
 
-	VkCommandBuffer commandBuffer = *m_CommandPoolBuffer;
-	vkResetCommandBuffer(commandBuffer, 0);
+	//vkResetCommandBuffer(commandBuffer, 0);
+
+	//----
+
 	m_CommandPoolBuffer->BufferStart();
 
-	m_SceneOne->PipelineDraw(commandBuffer, swapChainExtent,
+	VkCommandBuffer commandBuffer = m_CommandPoolBuffer->GetBuffer();
+
+	m_SceneOne->PipelineDraw(m_CommandPoolBuffer->GetBuffer(),
 		m_swapChainFramebuffers, imageIndex);
 
 	m_CommandPoolBuffer->BufferEnd();
+
+	//----
 
 	VkSubmitInfo submitInfo{};
 	submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;

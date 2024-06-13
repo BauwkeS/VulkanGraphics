@@ -9,9 +9,8 @@ class Command
 {
 public:
 
-	Command(VkDevice device)
-		: m_commandPool{},
-		m_Device{device}
+	Command()
+		: m_commandPool{}
 	{
 	};
 	~Command();
@@ -26,11 +25,12 @@ public:
 
 	void DestroyCommandPool(std::vector<VkFramebuffer> swapChainFramebuffers);
 
+	VkCommandBuffer GetBuffer() { return m_Buffer; }
+
 	void BufferStart();
 	void BufferEnd();
 
 private:
 	VkCommandPool m_commandPool;
 	VkCommandBuffer m_Buffer{};
-	VkDevice m_Device{};
 };

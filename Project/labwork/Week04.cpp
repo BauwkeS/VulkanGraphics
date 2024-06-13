@@ -1,4 +1,5 @@
 #include "vulkanbase/VulkanBase.h"
+#include "Globals.h"
 
 SwapChainSupportDetails VulkanBase::querySwapChainSupport(VkPhysicalDevice device) {
 	SwapChainSupportDetails details;
@@ -116,6 +117,7 @@ void VulkanBase::createSwapChain() {
 
 	swapChainImageFormat = surfaceFormat.format;
 	swapChainExtent = extent;
+	Globals::s_SwapChainExtent = extent;
 }
 
 void VulkanBase::createImageViews() {

@@ -40,9 +40,6 @@ struct Vertex {
 class MeshFactory
 {
 private:
-	VkDevice m_MeshDevice{};
-	VkPhysicalDevice m_MeshPhysicalDevice{};
-
 	VkBuffer m_vertexBuffer;
 	VkDeviceMemory m_vertexBufferMemory;
 
@@ -52,10 +49,7 @@ private:
 
 
 public:
-	MeshFactory(VkDevice device, VkPhysicalDevice physicalDevice):
-		m_MeshDevice{device},
-		m_MeshPhysicalDevice{physicalDevice}
-	{};
+	MeshFactory(){};
 	
 	~MeshFactory() {}
 	void DestroyMesh();

@@ -9,10 +9,8 @@
 class Scene
 {
 public:
-	Scene(VkDevice device, VkPhysicalDevice physicalDevice,Pipeline* pipeline, VkRenderPass renderPass
+	Scene(Pipeline* pipeline, VkRenderPass renderPass
 	) :
-		m_Device{ device },
-		m_PhysicalDevice{physicalDevice},
 		m_pipeline{pipeline},
 		m_RenderPass{ renderPass }
 		{
@@ -28,16 +26,14 @@ public:
 		std::vector<VkImageView> swapChainImageViews,
 		uint32_t queueFamilyIndicesGraphicsFamValue);
 	void MakeMeshes();
-	void PipelineDraw(VkCommandBuffer commandBuffer, const VkExtent2D& swapChainExtent,
+	void PipelineDraw(VkCommandBuffer commandBuffer,
 		const std::vector<VkFramebuffer>& swapChainFramebuffers, uint32_t imageIndex);
 	//void CleanupItems();
 
 private:
-	VkDevice m_Device{};
-	VkPhysicalDevice m_PhysicalDevice{};
 	Pipeline* m_pipeline;
 	VkRenderPass m_RenderPass{};
 	std::vector<MeshFactory> m_meshes{};
-	MeshFactory mesh{ m_Device, m_PhysicalDevice };
-	MeshFactory mesh2{ m_Device, m_PhysicalDevice };
+	MeshFactory mesh{  };
+	MeshFactory mesh2{  };
 };

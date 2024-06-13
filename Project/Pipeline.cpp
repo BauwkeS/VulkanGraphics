@@ -7,8 +7,27 @@ void Pipeline::DrawScene(VkCommandBuffer commandBuffer, std::vector<MeshFactory>
 {
 	vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_graphicsPipeline);
 
-	for (auto&& mesh : meshes)
+	/*vkCmdBindDescriptorSets(commandBuffer,
+		VK_PIPELINE_BIND_POINT_GRAPHICS,
+		m_PipelineLayout,
+		0,
+		1,
+		&m_UniformDescriptorSets[currentFrame],
+		0,
+		nullptr);*/
+
+	for (auto&& mesh : meshes) {
+		/*VkDescriptorSet textureDescriptorSet = sprite->GetTextureDescriptorSet();
+		vkCmdBindDescriptorSets(commandBuffer,
+			VK_PIPELINE_BIND_POINT_GRAPHICS,
+			m_PipelineLayout,
+			1,
+			1,
+			&textureDescriptorSet,
+			0,
+			nullptr);*/
 		mesh.Draw(commandBuffer);
+	}
 }
 
 void Pipeline::CreateGraphicsPipeline()
@@ -65,7 +84,7 @@ void Pipeline::CreateGraphicsPipeline()
 	pipelineLayoutInfo.setLayoutCount = 0;
 	pipelineLayoutInfo.pushConstantRangeCount = 0;
 
-	if (vkCreatePipelineLayout(m_Device, &pipelineLayoutInfo, nullptr, &m_pipelineLayout) != VK_SUCCESS) {
+	if (vkCreatePipelineLayout(Globals::device(), &pipelineLayoutInfo, nullptr, &m_pipelineLayout) != VK_SUCCESS) {
 		throw std::runtime_error("failed to create pipeline layout!");
 	}
 
@@ -99,48 +118,35 @@ void Pipeline::CreateGraphicsPipeline()
 	pipelineInfo.subpass = 0;
 	pipelineInfo.basePipelineHandle = VK_NULL_HANDLE;
 
-	if (vkCreateGraphicsPipelines(m_Device, VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &m_graphicsPipeline) != VK_SUCCESS) {
+	if (vkCreateGraphicsPipelines(Globals::device(), VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &m_graphicsPipeline) != VK_SUCCESS) {
 		throw std::runtime_error("failed to create graphics pipeline!");
 	}
 }
 
-void Pipeline::DrawFrame(VkCommandBuffer commandBuffer, const VkExtent2D& swapChainExtent,
-	const std::vector<VkFramebuffer>& swapChainFramebuffers, uint32_t imageIndex, std::vector<MeshFactory> meshes)
+void Pipeline::DrawFrame(VkCommandBuffer commandBuffer, std::vector<MeshFactory> meshes)
 {
-	VkRenderPassBeginInfo renderPassInfo{};
-	renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-	renderPassInfo.renderPass = m_RenderPass;
-	renderPassInfo.framebuffer = swapChainFramebuffers[imageIndex];
-	renderPassInfo.renderArea.offset = { 0, 0 };
-	renderPassInfo.renderArea.extent = swapChainExtent;
-
-	VkClearValue clearColor = { {{0.0f, 0.0f, 0.0f, 1.0f}} };
-	renderPassInfo.clearValueCount = 1;
-	renderPassInfo.pClearValues = &clearColor;
-
-	vkCmdBeginRenderPass(commandBuffer, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 
 	vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_graphicsPipeline);
 
 	VkViewport viewport{};
 	viewport.x = 0.0f;
 	viewport.y = 0.0f;
-	viewport.width = (float)swapChainExtent.width;
-	viewport.height = (float)swapChainExtent.height;
+	viewport.width = (float)Globals::swapChainExtent().width;
+	viewport.height = (float)Globals::swapChainExtent().height;
 	viewport.minDepth = 0.0f;
 	viewport.maxDepth = 1.0f;
 	vkCmdSetViewport(commandBuffer, 0, 1, &viewport);
 
 	VkRect2D scissor{};
 	scissor.offset = { 0, 0 };
-	scissor.extent = swapChainExtent;
+	scissor.extent = Globals::swapChainExtent();
 	vkCmdSetScissor(commandBuffer, 0, 1, &scissor);
 
 	//drawScene();
 	//vkCmdDraw(commandBuffer, 6, 1, 0, 0);
 	DrawScene(commandBuffer, meshes);
 
-	vkCmdEndRenderPass(commandBuffer);
+	
 }
 
 //void Pipeline::DestroyPipeline()
