@@ -76,6 +76,9 @@ public:
 	QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device);
 
 private:
+
+	void CreateDescriptorSetLayout();
+
 	void initVulkan() {
 		// week 06
 		createInstance();
@@ -151,6 +154,8 @@ private:
 
 		delete m_CommandPoolBuffer;
 		delete m_SceneOne;
+		vkDestroyDescriptorSetLayout(Globals::device(), Globals::descriptorSetLayout(), nullptr);
+
 		//eyo framebuffer is an issue here
 
 		if (enableValidationLayers) {

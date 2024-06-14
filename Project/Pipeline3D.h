@@ -8,6 +8,8 @@
 #include <Shader.h>
 
 #include "Globals.h"
+#include "Shader3D.h"
+#include "Mesh3D.h"
 
 class Pipeline3D
 {
@@ -15,14 +17,14 @@ private:
 	VkPipeline m_graphicsPipeline{};
 	VkPipelineLayout m_pipelineLayout{};
 
-	Shader* m_GradientShaderInfo;
+	Shader3D* m_GradientShaderInfo;
 
 	void DrawScene(VkCommandBuffer commandBuf, std::vector<MeshFactory> m_Meshes);
 
 public:
 	Pipeline3D()
 	{
-		m_GradientShaderInfo = new Shader{
+		m_GradientShaderInfo = new Shader3D{
 		"shaders/shader.vert.spv",
 		"shaders/shader.frag.spv"
 		};

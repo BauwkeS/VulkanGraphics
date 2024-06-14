@@ -9,12 +9,12 @@ private:
     static inline VkDevice s_Device{};
     static inline VkPhysicalDevice s_PhysicalDevice{};
     static inline VkRenderPass s_RenderPass{};
-   // static inline Swapchain* s_pSwapchain{};
+    static inline VkDescriptorSetLayout s_DescriptorSetLayout{};
     static inline VkExtent2D s_SwapChainExtent{};
+   // static inline Swapchain* s_pSwapchain{};
    /* static inline VkQueue s_GraphicsQueue{};
     static inline VkSurfaceKHR s_Surface{};
     static inline VkDescriptorPool s_TexturePool{};
-    static inline VkDescriptorSetLayout s_TextureSetLayout{};
     static inline VkCommandPool s_CommandPool{};
     static inline VkDescriptorBufferInfo s_BufferInfo{};*/
 
@@ -24,6 +24,7 @@ public:
     [[nodiscard]] static auto device() { return s_Device; }
     [[nodiscard]] static auto physicalDevice() { return s_PhysicalDevice; }
 	[[nodiscard]] static auto renderPass() { return s_RenderPass; }
+    [[nodiscard]] static auto descriptorSetLayout() { return s_DescriptorSetLayout; }
    //  [[nodiscard]] static auto pSwapchain() { return s_pSwapchain; }
     [[nodiscard]] static auto swapChainExtent() { return s_SwapChainExtent; }
     //[[nodiscard]] static auto graphicsQueue() { return s_GraphicsQueue; }

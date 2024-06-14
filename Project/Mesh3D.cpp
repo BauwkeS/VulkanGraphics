@@ -38,7 +38,16 @@ void Mesh3D::Draw(VkPipelineLayout pipelineLayout, VkCommandBuffer commandBuffer
 {
     m_VertexBuffer->BindAsVertexBuffer(commandBuffer);
     m_IndexBuffer->BindAsIndexBuffer(commandBuffer);
+    CreateUBOBuffer();
     vkCmdDrawIndexed(commandBuffer,
         static_cast<uint32_t>(m_Indices.size()),1,0,
         0,0);
+}
+
+void Mesh3D::CreateUBOBuffer()
+{
+    m_UBOBuffer = std::make_unique<Buffer>(
+        VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
+        VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+        sizeof(VertexUBO));
 }

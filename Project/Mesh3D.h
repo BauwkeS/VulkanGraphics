@@ -23,12 +23,28 @@ public:
 
     void Draw(VkPipelineLayout pipelineLayout, VkCommandBuffer commandBuffer);
 
+	//ubo stuff
+	//const VkDescriptorSetLayout& GetDescriptorSetLayout() { return m_DescriptorSetLayout; }
+    void BindDescriptorSet(VkCommandBuffer commandBuffer, VkPipelineLayout pipelineLayout, size_t index);
+
+
+    void CreateBuffers();
+
 private:
     std::vector<Vertex> m_Vertices{};
     std::vector<uint32_t> m_Indices{};
 
     std::unique_ptr<Buffer> m_VertexBuffer;
     std::unique_ptr<Buffer> m_IndexBuffer;
+    std::unique_ptr<Buffer> m_StagingBuffer;
+   
+    //ubo stuff
+    //VkDescriptorSetLayout m_DescriptorSetLayout;
+    std::unique_ptr<Buffer> m_UBOBuffer;
+    VertexUBO m_UBOSrc;
+    //command pool here in Koen's version
+
+    //--
 
 	//VertexConstant m_vertexConstant;
 
@@ -43,4 +59,6 @@ private:
     glm::vec3 m_Center{ 0, 0, 0 };
 
     void LoadModel();*/
+
+    void CreateUBOBuffer();
 };

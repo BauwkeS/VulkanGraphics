@@ -43,10 +43,13 @@ void Buffer::Upload(VkDeviceSize size, void* data)
 
 void Buffer::Map(VkDeviceSize size, void* data)
 {
+
 }
 
 void Buffer::Destroy()
 {
+    vkDestroyBuffer(Globals::device(), m_Buffer, nullptr);
+    vkFreeMemory(Globals::device(), m_BufferMemory, nullptr);
 }
 
 void Buffer::BindAsVertexBuffer(VkCommandBuffer commandBuffer)

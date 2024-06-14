@@ -29,10 +29,6 @@ public:
 	VkPipelineShaderStageCreateInfo createFragmentShaderInfo();
 	VkPipelineShaderStageCreateInfo createVertexShaderInfo();
 
-	//ubo stuff
-	void CreateDescriptorSetLayout();
-	const VkDescriptorSetLayout& GetDescriptorSetLayout() { return m_DescriptorSetLayout; }
-	void BindDescriptorSet(VkCommandBuffer commandBuffer, VkPipelineLayout pipelineLayout, size_t index);
 
 private:
 	VkShaderModule createShaderModule(const std::vector<char>& code);
@@ -44,14 +40,6 @@ private:
 
 	std::array<VkVertexInputAttributeDescription, 2> m_AttributeDescriptors{};
 	VkVertexInputBindingDescription m_vertexInputBindingDescription{};
-
-	//ubo stuff
-	VkDescriptorSetLayout m_DescriptorSetLayout;
-	std::unique_ptr<Buffer> m_UBOBuffer;
-	VertexUBO m_UBOSrc;
-	//command pool here in Koen's version
-
-	//--
 
 
 	Shader3D(const Shader3D&) = delete;
