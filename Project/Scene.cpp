@@ -19,7 +19,7 @@ Scene::~Scene()
 void Scene::InitItems()
 {
 	m_pipeline->CreateGraphicsPipeline();
-	m_pipeline2->CreateGraphicsPipeline();
+	//m_pipeline2->CreateGraphicsPipeline();
 }
 
 void Scene::MakeMeshes()

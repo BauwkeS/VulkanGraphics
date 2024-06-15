@@ -31,6 +31,20 @@ void Pipeline3D::DrawScene(VkCommandBuffer commandBuffer)
 	}
 }
 
+void Pipeline3D::CreateUBODescriptorSets()
+{
+}
+
+Pipeline3D::Pipeline3D()
+{
+	m_GradientShaderInfo = new Shader3D{
+		   "shaders/shader_ubo.vert.spv",
+		   "shaders/shader_ubo.frag.spv"
+	};
+
+	CreateGraphicsPipeline();
+}
+
 Pipeline3D::~Pipeline3D()
 {
 	vkDestroyPipeline(Globals::device(), m_graphicsPipeline, nullptr);
@@ -40,8 +54,7 @@ Pipeline3D::~Pipeline3D()
 
 void Pipeline3D::CreateGraphicsPipeline()
 {
-
-	m_GradientShaderInfo->Initialize();
+	//m_GradientShaderInfo->Initialize();
 
 	VkPipelineViewportStateCreateInfo viewportState{};
 	viewportState.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;

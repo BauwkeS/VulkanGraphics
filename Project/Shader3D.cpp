@@ -5,6 +5,17 @@
 #include <vulkanbase/VulkanBase.h>
 
 
+Shader3D::Shader3D(const std::string& vertexShaderFile, const std::string& fragmentShaderFile)
+: m_VertexShaderFile{ vertexShaderFile },
+m_FragmentShaderFile{ fragmentShaderFile }
+{
+	createVertexShaderInfo();
+	createFragmentShaderInfo();
+
+	m_vertexInputBindingDescription = Vertex::getBindingDescription();
+	m_AttributeDescriptors = Vertex::getAttributeDescriptions();
+}
+
 Shader3D::~Shader3D()
 {
 	vkDestroyShaderModule(Globals::device(), m_VertexInfo.module, nullptr);
@@ -18,11 +29,7 @@ void Shader3D::Initialize()
 		VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
 		sizeof(VertexUBO));*/
 
-	createVertexShaderInfo();
-	createFragmentShaderInfo();
-
-	m_vertexInputBindingDescription = Vertex::getBindingDescription();
-	m_AttributeDescriptors = Vertex::getAttributeDescriptions();
+	
 }
 
 //void Shader::DetroyShaderModules()

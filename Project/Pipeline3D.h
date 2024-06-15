@@ -4,8 +4,6 @@
 #include <vector>
 #include <string>
 #include <array>
-#include <Command.h>
-#include <Shader.h>
 
 #include "Globals.h"
 #include "Shader3D.h"
@@ -23,14 +21,15 @@ private:
 
 	std::vector<std::unique_ptr<Mesh3D>> m_Meshes;
 
+	//ubo stuff
+	void CreateUBOBuffers();
+	void CreateUBODescriptorSets();
+	std::vector<std::unique_ptr<Buffer>> m_UBOBuffers;
+	std::vector<void*> m_UBOBuffersMapped{};
+	std::vector<VkDescriptorSet> m_UBODescriptorSets{};
+
 public:
-	Pipeline3D()
-	{
-		m_GradientShaderInfo = new Shader3D{
-		"shaders/shader_ubo.vert.spv",
-		"shaders/shader_ubo.frag.spv"
-		};
-	}
+	Pipeline3D();
 	~Pipeline3D();
 	void CreateGraphicsPipeline();
 

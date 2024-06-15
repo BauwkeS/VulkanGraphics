@@ -14,10 +14,7 @@ public:
 	Shader3D(
 		const std::string& vertexShaderFile,
 		const std::string& fragmentShaderFile
-		) : m_VertexShaderFile{ vertexShaderFile },
-		m_FragmentShaderFile{ fragmentShaderFile }
-	{
-	}
+	);
 	~Shader3D();
 	
 	void Initialize();
