@@ -44,12 +44,13 @@ void VulkanBase::drawFrame() {
 	vkAcquireNextImageKHR(device, swapChain, UINT64_MAX, imageAvailableSemaphore, VK_NULL_HANDLE, &imageIndex);
 
 	//vkResetCommandBuffer(commandBuffer, 0);
-
+	VkCommandBuffer commandBuf = *m_CommandPoolBuffer;
+	vkResetCommandBuffer(commandBuf, /*VkCommandBufferResetFlagBits*/ 0);
 	//----
 
 	m_CommandPoolBuffer->BufferStart();
 
-	VkCommandBuffer commandBuffer = m_CommandPoolBuffer->GetBuffer();
+	//VkCommandBuffer commandBuffer = m_CommandPoolBuffer->GetBuffer();
 
 	m_SceneOne->PipelineDraw(m_CommandPoolBuffer->GetBuffer(),
 		m_swapChainFramebuffers, imageIndex);
@@ -68,7 +69,7 @@ void VulkanBase::drawFrame() {
 	submitInfo.pWaitDstStageMask = waitStages;
 
 	submitInfo.commandBufferCount = 1;
-	submitInfo.pCommandBuffers = &commandBuffer;
+	submitInfo.pCommandBuffers = &commandBuf;
 
 	VkSemaphore signalSemaphores[] = { renderFinishedSemaphore };
 	submitInfo.signalSemaphoreCount = 1;

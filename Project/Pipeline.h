@@ -7,6 +7,8 @@
 #include <Command.h>
 #include <Shader.h>
 
+#include "MeshFactory.h"
+
 class Pipeline
 {
 private:

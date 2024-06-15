@@ -19,18 +19,22 @@ private:
 
 	Shader3D* m_GradientShaderInfo;
 
-	void DrawScene(VkCommandBuffer commandBuf, std::vector<MeshFactory> m_Meshes);
+	void DrawScene(VkCommandBuffer commandBuf);
+
+	std::vector<std::unique_ptr<Mesh3D>> m_Meshes;
 
 public:
 	Pipeline3D()
 	{
 		m_GradientShaderInfo = new Shader3D{
-		"shaders/shader.vert.spv",
-		"shaders/shader.frag.spv"
+		"shaders/shader_ubo.vert.spv",
+		"shaders/shader_ubo.frag.spv"
 		};
 	}
 	~Pipeline3D();
 	void CreateGraphicsPipeline();
 
-	void DrawFrame(VkCommandBuffer commandBuffer,std::vector<MeshFactory> meshes);
+	void DrawFrame(VkCommandBuffer commandBuffer);
+
+	Mesh3D* AddMesh(const std::string& modelPath);
 };

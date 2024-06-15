@@ -2,6 +2,8 @@
 #include <stdexcept>
 #include <vulkan/vulkan_core.h>
 
+#include "Command.h"
+
 class Globals
 {
 private:
@@ -12,10 +14,10 @@ private:
     static inline VkDescriptorSetLayout s_DescriptorSetLayout{};
     static inline VkExtent2D s_SwapChainExtent{};
    // static inline Swapchain* s_pSwapchain{};
-   /* static inline VkQueue s_GraphicsQueue{};
-    static inline VkSurfaceKHR s_Surface{};
-    static inline VkDescriptorPool s_TexturePool{};
+    static inline VkQueue s_GraphicsQueue{};
     static inline VkCommandPool s_CommandPool{};
+   /* static inline VkSurfaceKHR s_Surface{};
+    static inline VkDescriptorPool s_TexturePool{};
     static inline VkDescriptorBufferInfo s_BufferInfo{};*/
 
     friend class VulkanBase;
@@ -27,15 +29,15 @@ public:
     [[nodiscard]] static auto descriptorSetLayout() { return s_DescriptorSetLayout; }
    //  [[nodiscard]] static auto pSwapchain() { return s_pSwapchain; }
     [[nodiscard]] static auto swapChainExtent() { return s_SwapChainExtent; }
-    //[[nodiscard]] static auto graphicsQueue() { return s_GraphicsQueue; }
+    [[nodiscard]] static auto graphicsQueue() { return s_GraphicsQueue; }
+    [[nodiscard]] static auto commandPool() { return s_CommandPool; }
     //[[nodiscard]] static auto surface() { return s_Surface; }
     //[[nodiscard]] static auto texturePool() { return s_TexturePool; }
     //[[nodiscard]] static auto textureSetLayout() { return s_TextureSetLayout; }
-    //[[nodiscard]] static auto commandPool() { return s_CommandPool; }
     //[[nodiscard]] static auto bufferInfo() { return s_BufferInfo; }
     //[[nodiscard]] static auto SetbufferInfo(VkDescriptorBufferInfo bfferInfo) { s_BufferInfo = bfferInfo; }
 
-   /* static VkCommandBuffer BeginSingleTimeCommands(VkCommandPool commandPool) {
+    static VkCommandBuffer BeginSingleTimeCommands(VkCommandPool commandPool) {
         VkCommandBufferAllocateInfo allocInfo{};
         allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
         allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
@@ -68,16 +70,27 @@ public:
         vkFreeCommandBuffers(Globals::device(), commandPool, 1, &commandBuffer);
     }
 
-    static void CopyBuffer(VkCommandPool commandPool, VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size) {
-        VkCommandBuffer commandBuffer = BeginSingleTimeCommands(commandPool);
+    static void CopyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size) {
+        /*VkCommandBuffer commandBuffer = BeginSingleTimeCommands(commandPool);
 
         VkBufferCopy copyRegion{};
         copyRegion.size = size;
         vkCmdCopyBuffer(commandBuffer, srcBuffer, dstBuffer, 1, &copyRegion);
 
-        EndSingleTimeCommands(commandBuffer, commandPool);
-    }
+        EndSingleTimeCommands(commandBuffer, commandPool);*/
 
+        Command commandB{};
+
+        commandB.BufferStart();
+        {
+            VkBufferCopy copyRegion{ copyRegion.size = size };
+            vkCmdCopyBuffer(commandB, srcBuffer, dstBuffer, 1, &copyRegion);
+        }
+        commandB.BufferEnd();
+
+        commandB.BufferSubmit();
+    }
+    /*
     static uint32_t FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties) {
         VkPhysicalDeviceMemoryProperties memProperties;
         vkGetPhysicalDeviceMemoryProperties(Globals::physicalDevice(), &memProperties);

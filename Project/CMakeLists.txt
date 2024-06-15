@@ -2,6 +2,12 @@
 set(SHADER_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/shaders")
 set(SHADER_BINARY_DIR "${CMAKE_CURRENT_BINARY_DIR}/shaders")
 
+#models
+set(MODELS_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/Models")
+set(MODELS_OUTPUT_DIR "${CMAKE_CURRENT_BINARY_DIR}/Models")
+file(MAKE_DIRECTORY "${MODELS_OUTPUT_DIR}")
+
+
 file(GLOB_RECURSE GLSL_SOURCE_FILES
     "${SHADER_SOURCE_DIR}/*.frag"
     "${SHADER_SOURCE_DIR}/*.vert"
@@ -40,6 +46,16 @@ set(SOURCES
 # Create the executable
 add_executable(${PROJECT_NAME} ${SOURCES} ${GLSL_SOURCE_FILES}  "vulkanbase/VulkanUtil.cpp" "labwork/Week03.cpp")
 add_dependencies(${PROJECT_NAME} Shaders)
+
+add_custom_command(
+    TARGET ${PROJECT_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    "${MODELS_SOURCE_DIR}" "${MODELS_OUTPUT_DIR}"
+    COMMENT "Copying models to output directory"
+)
+
+
+
 # Link libraries
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(${PROJECT_NAME} PRIVATE ${Vulkan_LIBRARIES} glfw)

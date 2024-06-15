@@ -4,7 +4,7 @@
 #include <MeshFactory.h>
 
 
-void Pipeline3D::DrawScene(VkCommandBuffer commandBuffer, std::vector<MeshFactory> meshes)
+void Pipeline3D::DrawScene(VkCommandBuffer commandBuffer)
 {
 	vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_graphicsPipeline);
 
@@ -17,7 +17,7 @@ void Pipeline3D::DrawScene(VkCommandBuffer commandBuffer, std::vector<MeshFactor
 		0,
 		nullptr);*/
 
-	for (auto&& mesh : meshes) {
+	for (auto&& mesh : m_Meshes) {
 		/*VkDescriptorSet textureDescriptorSet = sprite->GetTextureDescriptorSet();
 		vkCmdBindDescriptorSets(commandBuffer,
 			VK_PIPELINE_BIND_POINT_GRAPHICS,
@@ -27,7 +27,7 @@ void Pipeline3D::DrawScene(VkCommandBuffer commandBuffer, std::vector<MeshFactor
 			&textureDescriptorSet,
 			0,
 			nullptr);*/
-		mesh.Draw(commandBuffer);
+		mesh->Draw(commandBuffer);
 	}
 }
 
@@ -131,7 +131,7 @@ void Pipeline3D::CreateGraphicsPipeline()
 	}
 }
 
-void Pipeline3D::DrawFrame(VkCommandBuffer commandBuffer, std::vector<MeshFactory> meshes)
+void Pipeline3D::DrawFrame(VkCommandBuffer commandBuffer)
 {
 
 	vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_graphicsPipeline);
@@ -152,9 +152,15 @@ void Pipeline3D::DrawFrame(VkCommandBuffer commandBuffer, std::vector<MeshFactor
 
 	//drawScene();
 	//vkCmdDraw(commandBuffer, 6, 1, 0, 0);
-	DrawScene(commandBuffer, meshes);
+	DrawScene(commandBuffer);
 
 	
+}
+
+Mesh3D* Pipeline3D::AddMesh(const std::string& modelPath /*,const std::string& texturePath*/)
+{
+	m_Meshes.emplace_back(std::make_unique<Mesh3D>(modelPath));
+	return m_Meshes.back().get();
 }
 
 //void Pipeline::DestroyPipeline()

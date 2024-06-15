@@ -96,14 +96,15 @@ private:
 		
 		createRenderPass();
 
+		CreateCommandPool(findQueueFamilies(physicalDevice).graphicsFamily.value());
+		m_CommandPoolBuffer = new Command();
+		/*m_CommandPoolBuffer->CreateCommandBuffer();*/
+
 		m_SceneOne = new Scene();
 
 		m_SceneOne->InitItems();
 		createFrameBuffers();
 
-		m_CommandPoolBuffer = new Command();
-		m_CommandPoolBuffer->CreateCommandPool(findQueueFamilies(physicalDevice).graphicsFamily.value());
-		m_CommandPoolBuffer->CreateCommandBuffer();
 
 		//// week 03
 		//m_Pipeline.InitShader(device);
@@ -184,6 +185,20 @@ private:
 	
 
 	uint32_t currentFrame = 0;
+
+
+
+	void CreateCommandPool(uint32_t queueFamilyIndicesGraphicsFamValue)
+	{
+		VkCommandPoolCreateInfo poolInfo{};
+		poolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
+		poolInfo.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
+		poolInfo.queueFamilyIndex = queueFamilyIndicesGraphicsFamValue;
+
+		if (vkCreateCommandPool(Globals::device(), &poolInfo, nullptr, &Globals::s_CommandPool) != VK_SUCCESS) {
+			throw std::runtime_error("failed to create command pool!");
+		}
+	}
 
 	// Week 01: 
 	// Actual window

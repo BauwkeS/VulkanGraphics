@@ -23,8 +23,6 @@ private:
 	Pipeline* m_pipeline;
 	Pipeline3D* m_pipeline2;
 	std::vector<MeshFactory> m_meshes{};
-	std::vector<MeshFactory> m_meshes2{};
 	MeshFactory mesh{  };
 	MeshFactory mesh2{  };
-	MeshFactory mesh3{  };
 };
