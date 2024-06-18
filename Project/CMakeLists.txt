@@ -7,6 +7,12 @@ set(MODELS_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/Models")
 set(MODELS_OUTPUT_DIR "${CMAKE_CURRENT_BINARY_DIR}/Models")
 file(MAKE_DIRECTORY "${MODELS_OUTPUT_DIR}")
 
+#textures
+set(TEXTURES_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/Textures")
+set(TEXTURES_OUTPUT_DIR "${CMAKE_CURRENT_BINARY_DIR}/Textures")
+file(MAKE_DIRECTORY "${TEXTURES_OUTPUT_DIR}")
+
+
 
 file(GLOB_RECURSE GLSL_SOURCE_FILES
     "${SHADER_SOURCE_DIR}/*.frag"
@@ -53,7 +59,12 @@ add_custom_command(
     COMMENT "Copying models to output directory"
 )
 
-
+add_custom_command(
+    TARGET ${PROJECT_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    "${TEXTURES_SOURCE_DIR}" "${TEXTURES_OUTPUT_DIR}"
+    COMMENT "Copying textures to output directory pls"
+)
 
 # Link libraries
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
