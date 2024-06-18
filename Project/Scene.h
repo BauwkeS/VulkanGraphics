@@ -16,9 +16,10 @@ public:
 	void InitItems();
 	void MakeMeshes();
 	void PipelineDraw(VkCommandBuffer commandBuffer,
-		const std::vector<VkFramebuffer>& swapChainFramebuffers, uint32_t imageIndex);
+		const std::vector<VkFramebuffer>& swapChainFramebuffers, uint32_t imageIndex,
+		uint32_t currentFrame);
 	//void CleanupItems();
-
+	void Update(uint32_t currentFrame);
 private:
 	Pipeline* m_pipeline;
 	Pipeline3D* m_pipeline2;

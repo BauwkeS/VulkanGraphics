@@ -26,9 +26,8 @@ public:
 	void BufferStart();
 	void BufferEnd();
 	void BufferSubmit();
+	VkCommandBuffer m_Buffer{};
 
 private:
 	//VkCommandPool m_commandPool;
-	VkCommandBuffer m_Buffer{};
-	static inline uint32_t s_NumBuffers = 0;
 };

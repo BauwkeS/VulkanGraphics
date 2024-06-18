@@ -37,14 +37,13 @@ set(SOURCES
     # Add other source files here
     "labwork/Week01.cpp"
     "labwork/Week02.cpp" 
-    "labwork/Week03.cpp" 
     "labwork/Week04.cpp" 
     "labwork/Week05.cpp"
     "labwork/Week06.cpp"
- "Shader.h" "Shader.cpp" "Shader3D.h" "Shader3D.cpp" "Command.h" "Command.cpp" "Pipeline.h" "Pipeline.cpp" "Pipeline3D.h" "Pipeline3D.cpp" "MeshFactory.h" "MeshFactory.cpp" "Scene.h" "Scene.cpp" "Globals.h" "Globals.cpp" "Buffer.h" "Buffer.cpp" "Mesh3D.h" "Mesh3D.cpp" "Vertex.h"  )
+ "Shader.h" "Shader.cpp" "Shader3D.h" "Shader3D.cpp" "Command.h" "Command.cpp" "Pipeline.h" "Pipeline.cpp" "Pipeline3D.h" "Pipeline3D.cpp" "MeshFactory.h" "MeshFactory.cpp" "Scene.h" "Scene.cpp" "Globals.h" "Buffer.h" "Buffer.cpp" "Mesh3D.h" "Mesh3D.cpp" "Vertex.h"  )
 
 # Create the executable
-add_executable(${PROJECT_NAME} ${SOURCES} ${GLSL_SOURCE_FILES}  "vulkanbase/VulkanUtil.cpp" "labwork/Week03.cpp")
+add_executable(${PROJECT_NAME} ${SOURCES} ${GLSL_SOURCE_FILES}  "vulkanbase/VulkanUtil.cpp")
 add_dependencies(${PROJECT_NAME} Shaders)
 
 add_custom_command(

@@ -12,6 +12,7 @@ private:
     static inline VkPhysicalDevice s_PhysicalDevice{};
     static inline VkRenderPass s_RenderPass{};
     static inline VkDescriptorSetLayout s_DescriptorSetLayout{};
+    static inline VkDescriptorPool s_DescriptorPool{};
     static inline VkExtent2D s_SwapChainExtent{};
    // static inline Swapchain* s_pSwapchain{};
     static inline VkQueue s_GraphicsQueue{};
@@ -23,10 +24,13 @@ private:
     friend class VulkanBase;
 
 public:
+    [[nodiscard]] static const int MAX_FRAMES_IN_FLIGHT = 2;
+
     [[nodiscard]] static auto device() { return s_Device; }
     [[nodiscard]] static auto physicalDevice() { return s_PhysicalDevice; }
 	[[nodiscard]] static auto renderPass() { return s_RenderPass; }
     [[nodiscard]] static auto descriptorSetLayout() { return s_DescriptorSetLayout; }
+    [[nodiscard]] static auto descriptorPool() { return s_DescriptorPool; }
    //  [[nodiscard]] static auto pSwapchain() { return s_pSwapchain; }
     [[nodiscard]] static auto swapChainExtent() { return s_SwapChainExtent; }
     [[nodiscard]] static auto graphicsQueue() { return s_GraphicsQueue; }
@@ -81,16 +85,19 @@ public:
 
         Command commandB{};
 
+        //commandB.CreateCommandBuffer();
+
         commandB.BufferStart();
         {
-            VkBufferCopy copyRegion{ copyRegion.size = size };
+            VkBufferCopy copyRegion{};
+            copyRegion.size = size;
             vkCmdCopyBuffer(commandB, srcBuffer, dstBuffer, 1, &copyRegion);
         }
         commandB.BufferEnd();
 
         commandB.BufferSubmit();
     }
-    /*
+    
     static uint32_t FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties) {
         VkPhysicalDeviceMemoryProperties memProperties;
         vkGetPhysicalDeviceMemoryProperties(Globals::physicalDevice(), &memProperties);
@@ -102,5 +109,5 @@ public:
         }
 
         throw std::runtime_error("failed to find suitable memory type!");
-    }*/
+    }
 };

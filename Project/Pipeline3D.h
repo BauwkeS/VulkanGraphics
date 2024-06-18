@@ -33,7 +33,9 @@ public:
 	~Pipeline3D();
 	void CreateGraphicsPipeline();
 
-	void DrawFrame(VkCommandBuffer commandBuffer);
+	void DrawFrame(VkCommandBuffer commandBuffer, uint32_t currentFrame);
 
 	Mesh3D* AddMesh(const std::string& modelPath);
+
+	void UpdateUBO(uint32_t currentFrame);
 };

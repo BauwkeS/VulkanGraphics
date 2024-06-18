@@ -27,9 +27,6 @@
 #include "Pipeline.h"
 #include "MeshFactory.h"
 #include <Scene.h>
-#include <labwork/Week03.cpp>
-
-const int MAX_FRAMES_IN_FLIGHT = 2;
 
 const std::vector<const char*> validationLayers = {
 	"VK_LAYER_KHRONOS_validation"
@@ -97,12 +94,17 @@ private:
 		createRenderPass();
 
 		CreateCommandPool(findQueueFamilies(physicalDevice).graphicsFamily.value());
-		m_CommandPoolBuffer = new Command();
+		createCommandBuffers();
 		/*m_CommandPoolBuffer->CreateCommandBuffer();*/
+
+		CreateDescriptorSetLayout();
+		CreateDescriptorPool();
 
 		m_SceneOne = new Scene();
 
 		m_SceneOne->InitItems();
+		createColorResources();
+		createDepthResources();
 		createFrameBuffers();
 
 
@@ -126,6 +128,8 @@ private:
 		while (!glfwWindowShouldClose(window)) {
 			glfwPollEvents();
 			// week 06
+
+			m_SceneOne->Update(currentFrame);
 
 			drawFrame();
 		}
@@ -153,7 +157,7 @@ private:
 			vkDestroyImageView(device, imageView, nullptr);
 		}
 
-		delete m_CommandPoolBuffer;
+		//delete m_CommandPoolBuffer;
 		delete m_SceneOne;
 		vkDestroyDescriptorSetLayout(Globals::device(), Globals::descriptorSetLayout(), nullptr);
 
@@ -185,7 +189,7 @@ private:
 	
 
 	uint32_t currentFrame = 0;
-
+	bool m_FrameBufferResized{};
 
 
 	void CreateCommandPool(uint32_t queueFamilyIndicesGraphicsFamValue)
@@ -200,6 +204,9 @@ private:
 		}
 	}
 
+	VkDescriptorPool m_DescriptorPool{};
+	void CreateDescriptorPool();
+
 	// Week 01: 
 	// Actual window
 	// simple fragment + vertex shader creation functions
@@ -208,9 +215,6 @@ private:
 
 	GLFWwindow* window;
 	void initWindow();
-
-
-	std::vector<VkFramebuffer> m_swapChainFramebuffers;
 
 	//VkRenderPass m_renderPass;
 
@@ -223,6 +227,28 @@ private:
 	VkExtent2D swapChainExtent;
 
 	std::vector<VkImageView> swapChainImageViews;
+	std::vector<VkFramebuffer> m_swapChainFramebuffers{};
+
+	//--
+
+	void createDepthResources();
+	VkFormat findSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
+	VkFormat findDepthFormat();
+	void createImage(uint32_t width, uint32_t height, VkFormat format, VkImageTiling tiling,
+		VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage& image,
+		VkDeviceMemory& imageMemory);
+	void createColorResources();
+
+	VkImage m_DepthImage{};
+	VkDeviceMemory m_DepthImageMemory{};
+	VkImageView m_DepthImageView{};
+
+	VkSampleCountFlagBits m_MsaaSamples{ VK_SAMPLE_COUNT_1_BIT };
+	VkImage m_ColorImage{};
+	VkDeviceMemory m_ColorImageMemory{};
+	VkImageView m_ColorImageView{};
+
+	//--
 
 	SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice device);
 	VkPresentModeKHR chooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes);
@@ -230,6 +256,7 @@ private:
 	VkSurfaceFormatKHR chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats);
 	void createSwapChain();
 	void createImageViews();
+	VkImageView createImageView(VkImage image, VkFormat format, VkImageAspectFlags aspectFlags);
 
 	// Week 05 
 	// Logical and physical device
@@ -254,6 +281,9 @@ private:
 	VkSemaphore renderFinishedSemaphore;
 	VkFence inFlightFence;
 
+	void RecreateSwapChain();
+	void CleanupSwapChain();
+
 	void populateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo);
 	void setupDebugMessenger();
 	std::vector<const char*> getRequiredExtensions();
@@ -268,9 +298,11 @@ private:
 		return VK_FALSE;
 	}
 
-	Command* m_CommandPoolBuffer{};
+	//Command* m_CommandPoolBuffer{};
+	std::vector<Command*> m_CommandPoolBuffers{};
 	
 	Scene* m_SceneOne{};
 	void createRenderPass();
-	void  createFrameBuffers();
+	void createFrameBuffers();
+	void createCommandBuffers();
 };
