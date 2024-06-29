@@ -11,7 +11,8 @@ private:
     static inline VkDevice s_Device{};
     static inline VkPhysicalDevice s_PhysicalDevice{};
     static inline VkRenderPass s_RenderPass{};
-    static inline VkDescriptorSetLayout s_DescriptorSetLayout{};
+    static inline VkDescriptorSetLayout s_UBODescriptorSetLayout{};
+    static inline VkDescriptorSetLayout s_TextureDescriptorSetLayout{};
     static inline VkDescriptorPool s_DescriptorPool{};
     static inline VkExtent2D s_SwapChainExtent{};
    // static inline Swapchain* s_pSwapchain{};
@@ -22,6 +23,7 @@ private:
     static inline VkDescriptorBufferInfo s_BufferInfo{};*/
 
     friend class VulkanBase;
+    friend class Texture;
 
 public:
     [[nodiscard]] static const int MAX_FRAMES_IN_FLIGHT = 2;
@@ -29,7 +31,8 @@ public:
     [[nodiscard]] static auto device() { return s_Device; }
     [[nodiscard]] static auto physicalDevice() { return s_PhysicalDevice; }
 	[[nodiscard]] static auto renderPass() { return s_RenderPass; }
-    [[nodiscard]] static auto descriptorSetLayout() { return s_DescriptorSetLayout; }
+    [[nodiscard]] static auto UBODescriptorSetLayout() { return s_UBODescriptorSetLayout; }
+    [[nodiscard]] static auto TextureDescriptorSetLayout() { return s_TextureDescriptorSetLayout; }
     [[nodiscard]] static auto descriptorPool() { return s_DescriptorPool; }
    //  [[nodiscard]] static auto pSwapchain() { return s_pSwapchain; }
     [[nodiscard]] static auto swapChainExtent() { return s_SwapChainExtent; }

@@ -8,12 +8,21 @@ void Pipeline3D::DrawScene(VkCommandBuffer commandBuffer)
 {
 	//vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_graphicsPipeline);
 
+	//do this under this please bind your descriptor sets
 	/*vkCmdBindDescriptorSets(commandBuffer,
 		VK_PIPELINE_BIND_POINT_GRAPHICS,
 		m_PipelineLayout,
 		0,
 		1,
 		&m_UniformDescriptorSets[currentFrame],
+		0,
+		nullptr);*/
+	/*vkCmdBindDescriptorSets(commandBuffer,
+		VK_PIPELINE_BIND_POINT_GRAPHICS,
+		m_pipelineLayout,
+		0,
+		1,
+		&m_UBODescriptorSets[currentFrame],
 		0,
 		nullptr);*/
 
@@ -55,9 +64,9 @@ void Pipeline3D::CreateUBOBuffers()
 
 void Pipeline3D::CreateUBODescriptorSets()
 {
-	const std::vector<VkDescriptorSetLayout> layouts(
+	/*const std::vector<VkDescriptorSetLayout> layouts(
 		Globals::MAX_FRAMES_IN_FLIGHT,
-		Globals::descriptorSetLayout());
+		Globals::UBODescriptorSetLayout());
 
 	VkDescriptorSetAllocateInfo allocateInfo{};
 	allocateInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
@@ -94,8 +103,90 @@ void Pipeline3D::CreateUBODescriptorSets()
 		descriptorWrite.pTexelBufferView = nullptr;
 
 		vkUpdateDescriptorSets(Globals::device(), 1, &descriptorWrite, 0, nullptr);
+	}*/
+
+	std::vector<VkDescriptorSetLayout> layouts(Globals::MAX_FRAMES_IN_FLIGHT, Globals::UBODescriptorSetLayout());
+	VkDescriptorSetAllocateInfo allocInfo{};
+	allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
+	allocInfo.descriptorPool = Globals::descriptorPool();
+	allocInfo.descriptorSetCount = static_cast<uint32_t>(Globals::MAX_FRAMES_IN_FLIGHT);
+	allocInfo.pSetLayouts = layouts.data();
+
+	m_UBODescriptorSets.resize(Globals::MAX_FRAMES_IN_FLIGHT);
+	if (vkAllocateDescriptorSets(Globals::device(), &allocInfo, m_UBODescriptorSets.data()) != VK_SUCCESS) {
+		throw std::runtime_error("failed to allocate descriptor sets!");
 	}
+
+	for (size_t i = 0; i < Globals::MAX_FRAMES_IN_FLIGHT; i++) {
+		VkDescriptorBufferInfo bufferInfo{};
+		bufferInfo.buffer = m_UBOBuffers[i]->GetBuffer();
+		bufferInfo.offset = 0;
+		bufferInfo.range = sizeof(VertexUBO);
+
+		VkDescriptorImageInfo imageInfo{};
+		imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+		imageInfo.imageView = m_Meshes[0]->GetTexture()->GetTextureImageView();
+		imageInfo.sampler = m_Meshes[0]->GetTexture()->GetTextureSampler();
+
+		std::array<VkWriteDescriptorSet, 2> descriptorWrites{};
+
+		descriptorWrites[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+		descriptorWrites[0].dstSet = m_UBODescriptorSets[i];
+		descriptorWrites[0].dstBinding = 0;
+		descriptorWrites[0].dstArrayElement = 0;
+		descriptorWrites[0].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+		descriptorWrites[0].descriptorCount = 1;
+		descriptorWrites[0].pBufferInfo = &bufferInfo;
+
+		descriptorWrites[1].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+		descriptorWrites[1].dstSet = m_UBODescriptorSets[i];
+		descriptorWrites[1].dstBinding = 1;
+		descriptorWrites[1].dstArrayElement = 0;
+		descriptorWrites[1].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+		descriptorWrites[1].descriptorCount = 1;
+		descriptorWrites[1].pImageInfo = &imageInfo;
+
+		vkUpdateDescriptorSets(Globals::device(), static_cast<uint32_t>(descriptorWrites.size()), descriptorWrites.data(), 0, nullptr);
+	}
+
 }
+
+//void Pipeline3D::CreateTextureDescriptorSet()
+//{
+//	const VkDescriptorSetLayout layout = Globals::TextureDescriptorSetLayout();
+//
+//	VkDescriptorSetAllocateInfo allocateInfo{};
+//	allocateInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
+//	allocateInfo.descriptorPool = Globals::descriptorPool();
+//	allocateInfo.descriptorSetCount = 1;
+//	allocateInfo.pSetLayouts = &layout;
+//
+//	if (vkAllocateDescriptorSets(Globals::device(),
+//		&allocateInfo,
+//		&m_TextureDescriptorSet)
+//		!= VK_SUCCESS)
+//	{
+//		throw std::runtime_error("Failed to allocate texture descriptor sets");
+//	}
+//
+//	VkDescriptorImageInfo imageInfo{};
+//	imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+//	imageInfo.imageView = m_;
+//	imageInfo.sampler = m_TextureSampler;
+//
+//	VkWriteDescriptorSet descriptorWrite{};
+//	descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+//	descriptorWrite.dstSet = m_TextureDescriptorSet;
+//	descriptorWrite.dstBinding = 0;
+//	descriptorWrite.dstArrayElement = 0;
+//	descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+//	descriptorWrite.descriptorCount = 1;
+//	descriptorWrite.pBufferInfo = nullptr;
+//	descriptorWrite.pImageInfo = &imageInfo;
+//	descriptorWrite.pTexelBufferView = nullptr;
+//
+//	vkUpdateDescriptorSets(Globals::device(), 1, &descriptorWrite, 0, nullptr);
+//}
 
 Pipeline3D::Pipeline3D()
 {
@@ -108,13 +199,19 @@ Pipeline3D::Pipeline3D()
 
 	//ubo
 	CreateUBOBuffers();
-	CreateUBODescriptorSets();
+	//CreateUBODescriptorSets();
+	
 }
 
 Pipeline3D::~Pipeline3D()
 {
 	vkDestroyPipeline(Globals::device(), m_graphicsPipeline, nullptr);
 	vkDestroyPipelineLayout(Globals::device(), m_pipelineLayout, nullptr);
+
+	/*vkFreeDescriptorSets(Globals::device(),
+		Globals::descriptorPool(),
+		1,
+		&m_TextureDescriptorSet);*/
 
 }
 
@@ -178,7 +275,8 @@ void Pipeline3D::CreateGraphicsPipeline()
 	dynamicState.pDynamicStates = dynamicStates.data();
 
 	VkDescriptorSetLayout setLayouts[]{
-		Globals::descriptorSetLayout()
+		Globals::UBODescriptorSetLayout(),
+	//	Globals::TextureDescriptorSetLayout()
 	};
 
 	VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
@@ -227,7 +325,8 @@ void Pipeline3D::CreateGraphicsPipeline()
 
 void Pipeline3D::DrawFrame(VkCommandBuffer commandBuffer, uint32_t currentFrame)
 {
-
+	// moet naar initialize
+	// CreateUBODescriptorSets();
 	vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_graphicsPipeline);
 
 	VkViewport viewport{};
@@ -255,14 +354,18 @@ void Pipeline3D::DrawFrame(VkCommandBuffer commandBuffer, uint32_t currentFrame)
 
 	//drawScene();
 	//vkCmdDraw(commandBuffer, 6, 1, 0, 0);
-	DrawScene(commandBuffer);
+	//DrawScene(commandBuffer);
 
+
+	for (auto&& mesh : m_Meshes) {
+		mesh->Draw(commandBuffer);
+	}
 	
 }
 
-Mesh3D* Pipeline3D::AddMesh(const std::string& modelPath /*,const std::string& texturePath*/)
+Mesh3D* Pipeline3D::AddMesh(const std::string& modelPath ,const std::string& texturePath)
 {
-	m_Meshes.emplace_back(std::make_unique<Mesh3D>(modelPath));
+	m_Meshes.emplace_back(std::make_unique<Mesh3D>(modelPath, texturePath));
 	return m_Meshes.back().get();
 }
 
@@ -271,6 +374,9 @@ void Pipeline3D::UpdateUBO(uint32_t currentFrame)
 	VertexUBO ubo{};
 	//ubo.view = m_CameraPtr->View();
 	//ubo.proj = m_CameraPtr->Proj();
+	ubo.model = glm::rotate(glm::mat4(1.0f), 1 * glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+	ubo.view = glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+	ubo.proj = glm::perspective(glm::radians(45.0f), Globals::swapChainExtent().width / (float)Globals::swapChainExtent().height, 0.1f, 10.0f);
 	ubo.proj[1][1] *= -1;
 
 	memcpy(m_UBOBuffersMapped[currentFrame], &ubo, sizeof(ubo));

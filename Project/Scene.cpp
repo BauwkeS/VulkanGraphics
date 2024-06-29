@@ -6,6 +6,7 @@ Scene::Scene()
 	m_pipeline = new Pipeline();
 	m_pipeline2 = new Pipeline3D();
 	MakeMeshes();
+	m_pipeline2->CreateUBODescriptorSets();
 }
 
 Scene::~Scene()
@@ -33,7 +34,7 @@ void Scene::MakeMeshes()
 	m_meshes.push_back(mesh2);
 
 	//mesh3d_1 = new Mesh3D("Models/viking_room.obj");
-	m_pipeline2->AddMesh("Models/viking_room.obj");
+	m_pipeline2->AddMesh("Models/viking_room.obj", "Textures/viking_room.png");
 }
 
 void Scene::PipelineDraw(VkCommandBuffer commandBuffer,
@@ -45,7 +46,7 @@ void Scene::PipelineDraw(VkCommandBuffer commandBuffer,
 	};
 	clearValues[1].depthStencil = { 1.0f, 0 };*/
 
-
+	//m_pipeline2->UpdateUBO(currentFrame);
 
 	VkRenderPassBeginInfo renderPassInfo{};
 	renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
@@ -64,7 +65,7 @@ void Scene::PipelineDraw(VkCommandBuffer commandBuffer,
 
 	vkCmdBeginRenderPass(commandBuffer, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 
-	m_pipeline->DrawFrame(commandBuffer,m_meshes);
+	//m_pipeline->DrawFrame(commandBuffer,m_meshes);
 	m_pipeline2->DrawFrame(commandBuffer,currentFrame);
 
 	vkCmdEndRenderPass(commandBuffer);

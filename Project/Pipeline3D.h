@@ -11,6 +11,9 @@
 
 class Pipeline3D
 {
+
+public:
+	void CreateUBODescriptorSets();
 private:
 	VkPipeline m_graphicsPipeline{};
 	VkPipelineLayout m_pipelineLayout{};
@@ -23,10 +26,13 @@ private:
 
 	//ubo stuff
 	void CreateUBOBuffers();
-	void CreateUBODescriptorSets();
+	
 	std::vector<std::unique_ptr<Buffer>> m_UBOBuffers;
 	std::vector<void*> m_UBOBuffersMapped{};
 	std::vector<VkDescriptorSet> m_UBODescriptorSets{};
+
+	void CreateTextureDescriptorSet();
+	std::vector<VkDescriptorSet> m_TextureDescriptorSets{};
 
 public:
 	Pipeline3D();
@@ -35,7 +41,7 @@ public:
 
 	void DrawFrame(VkCommandBuffer commandBuffer, uint32_t currentFrame);
 
-	Mesh3D* AddMesh(const std::string& modelPath);
+	Mesh3D* AddMesh(const std::string& modelPath, const std::string& texturePath);
 
 	void UpdateUBO(uint32_t currentFrame);
 };

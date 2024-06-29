@@ -159,7 +159,8 @@ private:
 
 		//delete m_CommandPoolBuffer;
 		delete m_SceneOne;
-		vkDestroyDescriptorSetLayout(Globals::device(), Globals::descriptorSetLayout(), nullptr);
+		vkDestroyDescriptorSetLayout(Globals::device(), Globals::UBODescriptorSetLayout(), nullptr);
+		vkDestroyDescriptorSetLayout(Globals::device(), Globals::TextureDescriptorSetLayout(), nullptr);
 
 		//eyo framebuffer is an issue here
 
@@ -234,9 +235,9 @@ private:
 	void createDepthResources();
 	VkFormat findSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
 	VkFormat findDepthFormat();
-	void createImage(uint32_t width, uint32_t height, VkFormat format, VkImageTiling tiling,
-		VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage& image,
-		VkDeviceMemory& imageMemory);
+	//void createImage(uint32_t width, uint32_t height, VkFormat format, VkImageTiling tiling,
+	//	VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage& image,
+	//	VkDeviceMemory& imageMemory);
 	void createColorResources();
 
 	VkImage m_DepthImage{};
@@ -256,7 +257,7 @@ private:
 	VkSurfaceFormatKHR chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats);
 	void createSwapChain();
 	void createImageViews();
-	VkImageView createImageView(VkImage image, VkFormat format, VkImageAspectFlags aspectFlags);
+	//VkImageView createImageView(VkImage image, VkFormat format, VkImageAspectFlags aspectFlags);
 
 	// Week 05 
 	// Logical and physical device

@@ -12,8 +12,8 @@ m_FragmentShaderFile{ fragmentShaderFile }
 	createVertexShaderInfo();
 	createFragmentShaderInfo();
 
-	m_vertexInputBindingDescription = Vertex::getBindingDescription();
-	m_AttributeDescriptors = Vertex::getAttributeDescriptions();
+	m_vertexInputBindingDescription = Vertex3D::GetBindingDescription();
+	m_AttributeDescriptors = Vertex3D::GetAttributeDescriptions();
 }
 
 Shader3D::~Shader3D()

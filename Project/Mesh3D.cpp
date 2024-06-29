@@ -6,7 +6,7 @@
 
 #include "Globals.h"
 
-Mesh3D::Mesh3D(const std::string& modelPath)
+Mesh3D::Mesh3D(const std::string& modelPath, const std::string& texturePath)
 	: m_ModelPath{modelPath}
 {
    /* m_Texture = std::make_unique<Texture>(TEXTURE_PATH);
@@ -24,6 +24,8 @@ Mesh3D::Mesh3D(const std::string& modelPath)
    // m_Texture = std::make_unique<Texture>(texturePath);
     //LoadModel();
 
+    m_Texture = std::make_unique<Texture>(texturePath);
+
     LoadModel();
     CreateBuffers();
    }
@@ -38,6 +40,7 @@ void Mesh3D::Draw(VkCommandBuffer commandBuffer)
     m_VertexBuffer->BindAsVertexBuffer(commandBuffer);
     m_IndexBuffer->BindAsIndexBuffer(commandBuffer);
     //CreateUBOBuffer();
+
     vkCmdDrawIndexed(commandBuffer,
         (static_cast<uint32_t>(m_Indices.size())),1,0,
         0,0);

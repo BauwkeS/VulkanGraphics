@@ -6,6 +6,7 @@
 #include <vulkan/vulkan_core.h>
 
 #include "Buffer.h"
+#include "Texture.h"
 #include "Vertex.h"
 
 class Mesh3D
@@ -19,7 +20,7 @@ public:
     };
 
 
-    Mesh3D(const std::string& modelPath);
+    Mesh3D(const std::string& modelPath, const std::string& texturePath);
     ~Mesh3D() = default;
 
     Mesh3D(Mesh3D&& other) = delete;
@@ -38,6 +39,8 @@ public:
 
     void CreateBuffers();
 
+    Texture* GetTexture() { return m_Texture.get(); }
+
 private:
     std::string m_ModelPath;
     glm::mat4 m_ModelMatrix{ 1 };
@@ -52,7 +55,7 @@ private:
     //ubo stuff
     //VkDescriptorSetLayout m_DescriptorSetLayout;
     std::unique_ptr<Buffer> m_UBOBuffer;
-    VertexUBO m_UBOSrc;
+    //VertexUBO m_UBOSrc;
     //command pool here in Koen's version
 
     //--
@@ -67,8 +70,8 @@ private:
 
    /* std::unique_ptr<CommandPoolBuffer> m_CommandPoolBuffer{};
 
-    std::unique_ptr<Texture> m_Texture{}; THIS STILL NEEDED
     */
+    std::unique_ptr<Texture> m_Texture{};
 
     void CreateUBOBuffer();
 };
