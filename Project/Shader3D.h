@@ -35,7 +35,7 @@ private:
 
 	VkPipelineShaderStageCreateInfo m_VertexInfo{}, m_FragmentInfo{};
 
-	std::array<VkVertexInputAttributeDescription, 4> m_AttributeDescriptors{};
+	std::array<VkVertexInputAttributeDescription, 3> m_AttributeDescriptors{};
 	VkVertexInputBindingDescription m_vertexInputBindingDescription{};
 
 
