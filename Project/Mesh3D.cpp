@@ -1,6 +1,7 @@
 #include "Mesh3D.h"
 
 #define TINYOBJLOADER_IMPLEMENTATION
+#include <iostream>
 #include <OBJL/tiny_obj_loader.h>
 #include <unordered_map>
 
@@ -94,6 +95,85 @@ void Mesh3D::CreateUBOBuffer()
 
 void Mesh3D::LoadModel()
 {
+    int countV{};
+    //tinyobj::attrib_t attrib;
+    //std::vector<tinyobj::shape_t> shapes;
+    //std::vector<tinyobj::material_t> materials;
+    //std::string warn;
+    //std::string err;
+
+    //if (!LoadObj(&attrib, &shapes, &materials, &warn, &err, m_ModelPath.c_str()))
+    //{
+    //    throw std::runtime_error(warn + err);
+    //}
+
+    //std::unordered_map<Vertex3D, uint32_t> uniqueVertices{};
+
+    ////for (auto&& shape : shapes)
+    ////{
+    //    //for (auto&& index : shape.mesh.indices)
+    //    //{
+    //    //    Vertex3D vertex{};
+
+    //    //    vertex.pos = { attrib.vertices[3 * index.vertex_index + 0],
+    //    //                   attrib.vertices[3 * index.vertex_index + 1],
+    //    //                   attrib.vertices[3 * index.vertex_index + 2] };
+
+    //    //    vertex.normal = { attrib.normals[3 * index.normal_index + 0],
+    //    //                      attrib.normals[3 * index.normal_index + 1],
+    //    //                      attrib.normals[3 * index.normal_index + 2] };
+
+    //    //    vertex.texCoord
+    //    //        = { attrib.texcoords[2 * index.texcoord_index + 0],
+    //    //            1.0f - attrib.texcoords[2 * index.texcoord_index + 1] };
+
+    //    //    vertex.color = { 1.0f, 1.0f, 1.0f };
+
+    //    //    /*if (!uniqueVertices.contains(vertex))
+    //    //    {
+    //    //        uniqueVertices[vertex]
+    //    //            = static_cast<uint32_t>(m_Vertices.size());
+    //    //        m_Vertices.push_back(vertex);
+    //    //    }*/
+    //    //    if (uniqueVertices.count(vertex) == 0) {
+    //    //        uniqueVertices[vertex] = static_cast<uint32_t>(m_Vertices.size());
+    //    //        m_Vertices.push_back(vertex);
+    //    //    }
+
+    //    //    m_Indices.push_back(uniqueVertices[vertex]);
+    //    //}
+
+
+    ////}
+
+    //for (const auto& shape : shapes) {
+    //    for (const auto& index : shape.mesh.indices) {
+    //        Vertex3D vertex{};
+
+    //        vertex.pos = {
+    //            attrib.vertices[3 * index.vertex_index + 0],
+    //            attrib.vertices[3 * index.vertex_index + 1],
+    //            attrib.vertices[3 * index.vertex_index + 2]
+    //        };
+
+    //        vertex.texCoord = {
+    //            attrib.texcoords[2 * index.texcoord_index + 0],
+    //            1.0f - attrib.texcoords[2 * index.texcoord_index + 1]
+    //        };
+
+    //        vertex.color = { 1.0f, 1.0f, 1.0f };
+
+    //        if (!uniqueVertices.contains(vertex)){
+    //            uniqueVertices[vertex] = static_cast<uint32_t>(m_Vertices.size());
+    //            m_Vertices.push_back(vertex);
+    //            ++countV;
+    //        }
+
+    //        m_Indices.push_back(uniqueVertices[vertex]);
+    //    }
+    //}
+
+
     tinyobj::attrib_t attrib;
     std::vector<tinyobj::shape_t> shapes;
     std::vector<tinyobj::material_t> materials;
@@ -107,66 +187,41 @@ void Mesh3D::LoadModel()
 
     std::unordered_map<Vertex3D, uint32_t> uniqueVertices{};
 
-    //for (auto&& shape : shapes)
-    //{
-        //for (auto&& index : shape.mesh.indices)
-        //{
-        //    Vertex3D vertex{};
-
-        //    vertex.pos = { attrib.vertices[3 * index.vertex_index + 0],
-        //                   attrib.vertices[3 * index.vertex_index + 1],
-        //                   attrib.vertices[3 * index.vertex_index + 2] };
-
-        //    vertex.normal = { attrib.normals[3 * index.normal_index + 0],
-        //                      attrib.normals[3 * index.normal_index + 1],
-        //                      attrib.normals[3 * index.normal_index + 2] };
-
-        //    vertex.texCoord
-        //        = { attrib.texcoords[2 * index.texcoord_index + 0],
-        //            1.0f - attrib.texcoords[2 * index.texcoord_index + 1] };
-
-        //    vertex.color = { 1.0f, 1.0f, 1.0f };
-
-        //    /*if (!uniqueVertices.contains(vertex))
-        //    {
-        //        uniqueVertices[vertex]
-        //            = static_cast<uint32_t>(m_Vertices.size());
-        //        m_Vertices.push_back(vertex);
-        //    }*/
-        //    if (uniqueVertices.count(vertex) == 0) {
-        //        uniqueVertices[vertex] = static_cast<uint32_t>(m_Vertices.size());
-        //        m_Vertices.push_back(vertex);
-        //    }
-
-        //    m_Indices.push_back(uniqueVertices[vertex]);
-        //}
-
-
-    //}
-
-    for (const auto& shape : shapes) {
-        for (const auto& index : shape.mesh.indices) {
+    for (auto&& shape : shapes)
+    {
+        for (auto&& index : shape.mesh.indices)
+        {
             Vertex3D vertex{};
 
-            vertex.pos = {
-                attrib.vertices[3 * index.vertex_index + 0],
-                attrib.vertices[3 * index.vertex_index + 1],
-                attrib.vertices[3 * index.vertex_index + 2]
-            };
+            vertex.pos = { attrib.vertices[3 * index.vertex_index + 0],
+                           attrib.vertices[3 * index.vertex_index + 1],
+                           attrib.vertices[3 * index.vertex_index + 2] };
 
-            vertex.texCoord = {
-                attrib.texcoords[2 * index.texcoord_index + 0],
-                1.0f - attrib.texcoords[2 * index.texcoord_index + 1]
-            };
+            vertex.normal = { attrib.normals[3 * index.normal_index + 0],
+                              attrib.normals[3 * index.normal_index + 1],
+                              attrib.normals[3 * index.normal_index + 2] };
+
+            vertex.texCoord
+                = { attrib.texcoords[2 * index.texcoord_index + 0],
+                    1.0f - attrib.texcoords[2 * index.texcoord_index + 1] };
 
             vertex.color = { 1.0f, 1.0f, 1.0f };
 
-            if (!uniqueVertices.contains(vertex)){
-                uniqueVertices[vertex] = static_cast<uint32_t>(m_Vertices.size());
+            if (!uniqueVertices.contains(vertex))
+            {
+                uniqueVertices[vertex]
+                    = static_cast<uint32_t>(m_Vertices.size());
                 m_Vertices.push_back(vertex);
             }
 
             m_Indices.push_back(uniqueVertices[vertex]);
         }
+    }
+
+    std::cout << countV << std::endl;
+    for (auto vert : uniqueVertices)
+    {
+	    
+	 std::cout << vert.first.pos.x << ", "<< vert.first.pos.y << ", " <<vert.first.pos.z << std::endl;
     }
 }

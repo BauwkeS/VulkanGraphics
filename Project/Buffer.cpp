@@ -61,7 +61,7 @@ void Buffer::BindAsVertexBuffer(VkCommandBuffer commandBuffer)
 
 void Buffer::BindAsIndexBuffer(VkCommandBuffer commandBuffer)
 {
-	vkCmdBindIndexBuffer(commandBuffer, m_Buffer,0,VK_INDEX_TYPE_UINT16);
+	vkCmdBindIndexBuffer(commandBuffer, m_Buffer,0,VK_INDEX_TYPE_UINT32);
 }
 
 uint32_t Buffer::FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties)
