@@ -218,10 +218,10 @@ void Mesh3D::LoadModel()
         }
     }
 
-    std::cout << countV << std::endl;
+    /*std::cout << countV << std::endl;
     for (auto vert : uniqueVertices)
     {
 	    
 	 std::cout << vert.first.pos.x << ", "<< vert.first.pos.y << ", " <<vert.first.pos.z << std::endl;
-    }
+    }*/
 }

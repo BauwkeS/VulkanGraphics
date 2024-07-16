@@ -65,10 +65,10 @@ void Scene::PipelineDraw(VkCommandBuffer commandBuffer,
 
 	vkCmdBeginRenderPass(commandBuffer, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 
-	//m_pipeline->DrawFrame(commandBuffer,m_meshes);
+	m_pipeline->DrawFrame(commandBuffer,m_meshes);
 	m_pipeline2->DrawFrame(commandBuffer,currentFrame);
 
-	vkCmdEndRenderPass(commandBuffer);
+	vkCmdEndRenderPass(commandBuffer);  
 }
 
 void Scene::Update(uint32_t currentFrame)
