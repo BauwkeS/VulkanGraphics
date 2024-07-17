@@ -73,7 +73,9 @@ void Scene::PipelineDraw(VkCommandBuffer commandBuffer,
 
 void Scene::Update(uint32_t currentFrame)
 {
-	m_pipeline2->UpdateUBO(currentFrame);
+	m_pipeline2->Update(currentFrame);
+
+	//update your MESHES here too!
 }
 
 //void Scene::CleanupItems()

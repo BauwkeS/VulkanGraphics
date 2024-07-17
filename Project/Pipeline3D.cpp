@@ -377,7 +377,7 @@ void Pipeline3D::UpdateUBO(uint32_t currentFrame)
 	ubo.view = Globals::camera()->View();
 	ubo.proj = Globals::camera()->Proj();
 	ubo.model = glm::mat4(1.0f);
-	ubo.model = glm::rotate(glm::mat4(1.0f), 1 * glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+	//ubo.model = glm::rotate(glm::mat4(1.0f), 1 * glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 	//ubo.view = glm::mat4(1.0f);
 	//ubo.proj = glm::mat4(1.0f);
 	//ubo.view = glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
@@ -385,6 +385,18 @@ void Pipeline3D::UpdateUBO(uint32_t currentFrame)
 	ubo.proj[1][1] *= -1;
 
 	memcpy(m_UBOBuffersMapped[currentFrame], &ubo, sizeof(ubo));
+}
+
+void Pipeline3D::Update(uint32_t currentFrame)
+{
+	//Update UBO
+	UpdateUBO(currentFrame);
+
+	//Update meshes
+	for (auto&& mesh : m_Meshes)
+	{
+		mesh->Update();
+	}
 }
 
 //void Pipeline::DestroyPipeline()

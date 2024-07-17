@@ -7,6 +7,7 @@
 
 
 #include "Globals.h"
+#include "TimeCount.h"
 
 Mesh3D::Mesh3D(const std::string& modelPath, const std::string& texturePath)
 	: m_ModelPath{modelPath}
@@ -34,6 +35,17 @@ Mesh3D::Mesh3D(const std::string& modelPath, const std::string& texturePath)
 
 void Mesh3D::DestroyMesh()
 {
+}
+
+void Mesh3D::Update()
+{
+    if (m_Rotate)
+    {
+        m_Angle += TimeCount::Delta() * 0.01f;
+        m_ModelMatrix = (glm::rotate(glm::translate(glm::mat4(1.f), m_Center),
+            m_Angle,
+            m_Axis));
+    }
 }
 
 

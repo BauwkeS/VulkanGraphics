@@ -44,4 +44,6 @@ public:
 	Mesh3D* AddMesh(const std::string& modelPath, const std::string& texturePath);
 
 	void UpdateUBO(uint32_t currentFrame);
+
+	void Update(uint32_t currentFrame);
 };

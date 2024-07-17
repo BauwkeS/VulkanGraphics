@@ -6,6 +6,10 @@
 
 
 #include "Camera.h"
+
+#include <iostream>
+
+
 #include "TimeCount.h"
 #include "InputSys.h"
 
@@ -23,8 +27,11 @@ void Camera::Update()
 {
     const auto deltaTime{ TimeCount::Delta() };
 
+    //DELTATIME IS CORRECT
+
     // Keyboard input
     {
+
         float speed{ 5.f * deltaTime };
 
         if (InputSys::KeyHeld(GLFW_KEY_LEFT_SHIFT))
@@ -43,6 +50,8 @@ void Camera::Update()
         const float UpInput = static_cast<float>(InputSys::KeyHeld(GLFW_KEY_E)
             - InputSys::KeyHeld(GLFW_KEY_Q));
         m_OriginTarget += m_Up * speed * UpInput;
+
+        std::cout << m_OriginTarget.x << std::endl;
     }
 
     // Mouse input
@@ -62,9 +71,9 @@ void Camera::Update()
         }
     }
 
-   // m_Origin = lerpCamera(m_Origin, m_OriginTarget, deltaTime, .5f);
-   // m_TotalPitch = lerpCamera(m_TotalPitch, m_TotalPitchTarget, deltaTime, .5f);
-   // m_TotalYaw = lerpCamera(m_TotalYaw, m_TotalYawTarget, deltaTime, .5f);
+    m_Origin = lerpCamera(m_Origin, m_OriginTarget, deltaTime, .5f);
+    m_TotalPitch = lerpCamera(m_TotalPitch, m_TotalPitchTarget, deltaTime, .5f);
+    m_TotalYaw = lerpCamera(m_TotalYaw, m_TotalYawTarget, deltaTime, .5f);
 
     UpdateMatrices();
 }

@@ -30,6 +30,8 @@ public:
 
 	void DestroyMesh();
 
+    void Update();
+
     void Draw(VkCommandBuffer commandBuffer);
 
 	//ubo stuff

@@ -38,6 +38,38 @@ void VulkanBase::initWindow() {
 	glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 	window = glfwCreateWindow(WIDTH, HEIGHT, "Vulkan", nullptr, nullptr);
 
+
+	glfwSetWindowUserPointer(window, this);
+	glfwSetKeyCallback(window,
+		[](GLFWwindow*, int key, int, int action, int) -> void
+		{
+			if (action == GLFW_PRESS)
+			{
+				InputSys::OnKeyDown(key);
+			}
+			else if (action == GLFW_RELEASE)
+			{
+				InputSys::OnKeyUp(key);
+			}
+		});
+	glfwSetCursorPosCallback(window,
+		[](GLFWwindow*, double xPos, double yPos) -> void
+		{
+			InputSys::OnMouseMove({ xPos, yPos });
+		});
+	glfwSetMouseButtonCallback(window,
+		[](GLFWwindow*, int button, int action, int)
+		{
+			if (action == GLFW_PRESS)
+			{
+				InputSys::OnButtonDown(button);
+			}
+			else if (action == GLFW_RELEASE)
+			{
+				InputSys::OnButtonUp(button);
+			}
+		});
+
 	glfwSetFramebufferSizeCallback(
 		window,
 		[](GLFWwindow* windowPtr, int width, int height) -> void

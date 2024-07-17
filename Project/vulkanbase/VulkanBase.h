@@ -104,8 +104,8 @@ private:
 		CreateDescriptorSetLayout();
 		CreateDescriptorPool();
 
-		m_pCamera = new Camera(glm::vec3{ 0.f, 18.f, -18.f },
-		glm::radians(80.f),(
+		m_pCamera = new Camera(glm::vec3{ },
+		glm::radians(90.f),(
 		static_cast<float>(Globals::swapChainExtent().width)
 		/ Globals::swapChainExtent().height));
 	m_pCamera->SetPitch(.5f);
@@ -138,16 +138,16 @@ private:
 
 	void mainLoop() {
 		while (!glfwWindowShouldClose(window)) {
-			glfwPollEvents();
 			// week 06
-
-			m_SceneOne->Update(currentFrame);
 
 			TimeCount::Update();
 			InputSys::Update();
 
+			glfwPollEvents();
+
 			m_pCamera->Update();
 
+			m_SceneOne->Update(currentFrame);
 
 			drawFrame();
 		}

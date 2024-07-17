@@ -21,14 +21,14 @@ private:
 
     // NOTE: framerate-independent lerp from
 	// https://mastodon.social/@acegikmo/111931613710775864
-    //template<typename Type>
-    //Type lerpCamera(const Type& a, const Type& b, float deltaTime, float duration)
-    //{
-    //    // half life (2)
-    //    const float h{ -duration / glm::log2(1 / 1000.f) };
+    template<typename Type>
+    Type lerpCamera(const Type& a, const Type& b, float deltaTime, float duration)
+    {
+        // half life (2)
+        const float h{ -duration / glm::log2(1 / 1000.f) };
 
-    //    return b + (a - b) * glm::exp2(-deltaTime / h);
-    //}
+        return b + (a - b) * glm::exp2(-deltaTime / h);
+    }
 
     //----
 
