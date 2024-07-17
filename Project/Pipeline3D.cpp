@@ -3,6 +3,8 @@
 #include "Vertex.h"
 #include <stdexcept>
 
+#include "Camera.h"
+
 
 void Pipeline3D::DrawScene(VkCommandBuffer commandBuffer)
 {
@@ -372,14 +374,14 @@ Mesh3D* Pipeline3D::AddMesh(const std::string& modelPath ,const std::string& tex
 void Pipeline3D::UpdateUBO(uint32_t currentFrame)
 {
 	VertexUBO ubo{};
-	//ubo.view = m_CameraPtr->View();
-	//ubo.proj = m_CameraPtr->Proj();
+	ubo.view = Globals::camera()->View();
+	ubo.proj = Globals::camera()->Proj();
 	ubo.model = glm::mat4(1.0f);
 	ubo.model = glm::rotate(glm::mat4(1.0f), 1 * glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 	//ubo.view = glm::mat4(1.0f);
 	//ubo.proj = glm::mat4(1.0f);
-	ubo.view = glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-	ubo.proj = glm::perspective(glm::radians(45.0f), Globals::swapChainExtent().width / (float)Globals::swapChainExtent().height, 0.1f, 10.0f);
+	//ubo.view = glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+	//ubo.proj = glm::perspective(glm::radians(45.0f), Globals::swapChainExtent().width / (float)Globals::swapChainExtent().height, 0.1f, 10.0f);
 	ubo.proj[1][1] *= -1;
 
 	memcpy(m_UBOBuffersMapped[currentFrame], &ubo, sizeof(ubo));
