@@ -265,8 +265,7 @@ void VulkanBase::RecreateSwapChain()
 	createDepthResources();
 	createFrameBuffers();
 
-	/*m_pCamera->aspectRatio(static_cast<float>(Globals::swapChainExtent() .width)
-		/ Globals::swapChainExtent().height);*/
+	//m_CameraPtr->aspectRatio(GetAspectRatio());
 }
 
 void VulkanBase::CleanupSwapChain()

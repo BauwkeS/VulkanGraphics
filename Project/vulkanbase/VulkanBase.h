@@ -25,11 +25,8 @@
 #include "Shader.h"
 #include "Command.h"
 #include "Pipeline.h"
-#include "Scene.h"
-
-//#include "Camera.h"
-//#include "TimeCount.h"
-//#include "Input.h"
+#include "MeshFactory.h"
+#include <Scene.h>
 
 const std::vector<const char*> validationLayers = {
 	"VK_LAYER_KHRONOS_validation"
@@ -103,13 +100,6 @@ private:
 		CreateDescriptorSetLayout();
 		CreateDescriptorPool();
 
-		/*m_pCamera = new Camera(glm::vec3{ 0.f, 18.f, -18.f },
-			glm::radians(80.f),(
-			static_cast<float>(Globals::swapChainExtent().width)
-			/ Globals::swapChainExtent().height));
-		m_pCamera->SetPitch(.5f);
-		Globals::s_pCamera = m_pCamera;*/
-
 		m_SceneOne = new Scene();
 
 		m_SceneOne->InitItems();
@@ -139,10 +129,6 @@ private:
 			glfwPollEvents();
 			// week 06
 
-			//TimeCount::Update();
-			//Input::Update();
-
-			//m_pCamera->Update();
 			m_SceneOne->Update(currentFrame);
 
 			drawFrame();
@@ -320,6 +306,4 @@ private:
 	void createRenderPass();
 	void createFrameBuffers();
 	void createCommandBuffers();
-
-	//Camera* m_pCamera{};
 };

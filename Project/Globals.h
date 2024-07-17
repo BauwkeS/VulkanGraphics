@@ -3,8 +3,6 @@
 #include <vulkan/vulkan_core.h>
 
 #include "Command.h"
-#include "Camera.h"
-#include "vulkanbase/VulkanBase.h"
 
 class Globals
 {
@@ -20,7 +18,6 @@ private:
    // static inline Swapchain* s_pSwapchain{};
     static inline VkQueue s_GraphicsQueue{};
     static inline VkCommandPool s_CommandPool{};
-//    static inline Camera* s_pCamera{}; 
    /* static inline VkSurfaceKHR s_Surface{};
     static inline VkDescriptorPool s_TexturePool{};
     static inline VkDescriptorBufferInfo s_BufferInfo{};*/
@@ -41,7 +38,6 @@ public:
     [[nodiscard]] static auto swapChainExtent() { return s_SwapChainExtent; }
     [[nodiscard]] static auto graphicsQueue() { return s_GraphicsQueue; }
     [[nodiscard]] static auto commandPool() { return s_CommandPool; }
-    //[[nodiscard]] static auto camera() { return s_pCamera; }
     //[[nodiscard]] static auto surface() { return s_Surface; }
     //[[nodiscard]] static auto texturePool() { return s_TexturePool; }
     //[[nodiscard]] static auto textureSetLayout() { return s_TextureSetLayout; }
