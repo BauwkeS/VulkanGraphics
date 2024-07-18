@@ -34,7 +34,7 @@ void Scene::MakeMeshes()
 	m_meshes.push_back(mesh2);
 
 	//mesh3d_1 = new Mesh3D("Models/viking_room.obj");
-	m_pipeline2->AddMesh("Models/viking_room.obj", "Textures/viking_room.png");
+	m_pipeline2->AddMesh("Models/cube.obj", "Textures/cube/cube_albedo.jpg");
 }
 
 void Scene::PipelineDraw(VkCommandBuffer commandBuffer,
