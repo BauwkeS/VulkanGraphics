@@ -16,6 +16,10 @@ Texture::Texture(std::string texturePath):
     CreateTextureImageView();
     CreateTextureSampler();
     //CreateTextureDescriptorSet();
+
+    m_ImageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+    m_ImageInfo.imageView = m_TextureImageView;
+    m_ImageInfo.sampler = m_TextureSampler;
 }
 
 Texture::~Texture()

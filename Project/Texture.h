@@ -30,6 +30,11 @@ public:
     VkSampler GetTextureSampler() { return m_TextureSampler; }
 
     void CreateTextureDescriptorSet();
+
+    [[nodiscard]] const VkDescriptorImageInfo& GetImageInfo() const
+    {
+        return m_ImageInfo;
+    }
 private:
     std::string m_TexturePath;
 
@@ -38,7 +43,8 @@ private:
     VkDeviceMemory m_TextureImageMemory{};
     VkImageView m_TextureImageView{};
     VkSampler m_TextureSampler{};
-    
+
+    VkDescriptorImageInfo m_ImageInfo{};
 
     void CreateTextureImage();
     void CreateTextureImageView();
