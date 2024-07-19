@@ -50,8 +50,6 @@ void Camera::Update()
         const float UpInput = static_cast<float>(InputSys::KeyHeld(GLFW_KEY_E)
             - InputSys::KeyHeld(GLFW_KEY_Q));
         m_OriginTarget += m_Up * speed * UpInput;
-
-        std::cout << m_OriginTarget.x << std::endl;
     }
 
     // Mouse input
