@@ -64,7 +64,7 @@ void Pipeline3D::CreateUBOBuffers()
 	}
 }
 
-void Pipeline3D::CreateUBODescriptorSets()
+void Pipeline3D::CreateUBODescriptorSets(const Texture* & textures)//VkDescriptorSet descriptorSetMaterial)
 {
 	/*const std::vector<VkDescriptorSetLayout> layouts(
 		Globals::MAX_FRAMES_IN_FLIGHT,
@@ -106,7 +106,7 @@ void Pipeline3D::CreateUBODescriptorSets()
 
 		vkUpdateDescriptorSets(Globals::device(), 1, &descriptorWrite, 0, nullptr);
 	}*/
-
+	
 	std::vector<VkDescriptorSetLayout> layouts(Globals::MAX_FRAMES_IN_FLIGHT, Globals::UBODescriptorSetLayout());
 	VkDescriptorSetAllocateInfo allocInfo{};
 	allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
@@ -126,9 +126,10 @@ void Pipeline3D::CreateUBODescriptorSets()
 		bufferInfo.range = sizeof(VertexUBO);
 
 		VkDescriptorImageInfo imageInfo{};
-		imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+	/*	imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 		imageInfo.imageView = m_Meshes[0]->GetTexture()->GetTextureImageView();
-		imageInfo.sampler = m_Meshes[0]->GetTexture()->GetTextureSampler();
+		imageInfo.sampler = m_Meshes[0]->GetTexture()->GetTextureSampler();*/
+		imageInfo = textures->GetImageInfo();
 
 		std::array<VkWriteDescriptorSet, 2> descriptorWrites{};
 
@@ -188,6 +189,17 @@ void Pipeline3D::CreateUBODescriptorSets()
 //	descriptorWrite.pTexelBufferView = nullptr;
 //
 //	vkUpdateDescriptorSets(Globals::device(), 1, &descriptorWrite, 0, nullptr);
+//}
+//
+//void Pipeline3D::AddTexture(const std::string& id, const std::string& path)
+//{
+//	m_Textures[id] = std::make_unique<Texture>(path);
+//}
+//
+//void Pipeline3D::AddMaterial(const std::string& id, const std::vector<const Texture*>& textures)
+//{
+//	m_Materials[id] = std::make_unique<Material>(textures);
+//	//m_Materials[id]->MakeUBOStuff(textures, m_UBOBuffers);
 //}
 
 Pipeline3D::Pipeline3D()
@@ -360,14 +372,26 @@ void Pipeline3D::DrawFrame(VkCommandBuffer commandBuffer, uint32_t currentFrame)
 
 
 	for (auto&& mesh : m_Meshes) {
+
+		VkDescriptorSet materialDescriptorSet = mesh->GetMaterialDescriptorSet();
+		vkCmdBindDescriptorSets(commandBuffer,
+			VK_PIPELINE_BIND_POINT_GRAPHICS,
+			m_pipelineLayout,
+			1,
+			1,
+			&materialDescriptorSet,
+			0,
+			nullptr);
+
 		mesh->Draw(commandBuffer);
 	}
 	
 }
 
-Mesh3D* Pipeline3D::AddMesh(const std::string& modelPath ,const std::string& texturePath)
+Mesh3D* Pipeline3D::AddMesh(const std::string& modelPath , const Material* materialPtr)
 {
-	m_Meshes.emplace_back(std::make_unique<Mesh3D>(modelPath, texturePath));
+//	const Material* pMaterial = m_Materials[id].get();
+		m_Meshes.emplace_back(std::make_unique<Mesh3D>(modelPath, materialPtr));
 	return m_Meshes.back().get();
 }
 

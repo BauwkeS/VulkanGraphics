@@ -26,4 +26,13 @@ private:
 	std::vector<MeshFactory> m_meshes{};
 	MeshFactory mesh{  };
 	MeshFactory mesh2{  };
+
+
+	//materials and textures for the PBR
+	void AddTexture(const std::string& id, const std::string& path);
+	void AddMaterial(const std::string& id, const std::vector<const Texture*>& textures);
+
+	std::unordered_map<std::string, std::unique_ptr<Texture>> m_Textures;
+	std::unordered_map<std::string, std::unique_ptr<Material>> m_Materials;
+
 };

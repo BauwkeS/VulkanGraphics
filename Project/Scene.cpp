@@ -6,7 +6,7 @@ Scene::Scene()
 	m_pipeline = new Pipeline();
 	m_pipeline2 = new Pipeline3D();
 	MakeMeshes();
-	m_pipeline2->CreateUBODescriptorSets();
+	//m_pipeline2->CreateUBODescriptorSets();
 }
 
 Scene::~Scene()
@@ -34,7 +34,27 @@ void Scene::MakeMeshes()
 	m_meshes.push_back(mesh2);
 
 	//mesh3d_1 = new Mesh3D("Models/viking_room.obj");
-	m_pipeline2->AddMesh("Models/cube.obj", "Textures/cube/cube_albedo.jpg");
+	//m_pipeline2->AddMesh("Models/cube.obj", "Textures/cube/cube_albedo.jpg");
+
+	//Add cube info inside pipeline
+	AddTexture("cube_albedo", "Textures/cube/cube_albedo.jpg");
+	AddTexture("cube_ao", "Textures/cube/cube_ao.jpg");
+	AddTexture("cube_normal", "Textures/cube/cube_normal.jpg");
+	AddTexture("cube_roughness", "Textures/cube/cube_roughness.jpg");
+
+	std::vector<const Texture*> cubeTextures{
+		m_Textures["cube_albedo"].get(),
+			m_Textures["cube_ao"].get(),
+			m_Textures["cube_normal"].get(),
+			m_Textures["cube_roughness"].get() };
+
+	AddMaterial("cube",cubeTextures);
+
+	m_pipeline2->AddMesh("Models/cube.obj", m_Materials["cube"].get());
+	for (auto textures : cubeTextures)
+	{
+		m_pipeline2->CreateUBODescriptorSets(textures);
+	}
 }
 
 void Scene::PipelineDraw(VkCommandBuffer commandBuffer,
@@ -76,6 +96,16 @@ void Scene::Update(uint32_t currentFrame)
 	m_pipeline2->Update(currentFrame);
 
 	//update your MESHES here too!
+}
+
+void Scene::AddTexture(const std::string& id, const std::string& path)
+{
+	m_Textures[id] = std::make_unique<Texture>(path);
+}
+
+void Scene::AddMaterial(const std::string& id, const std::vector<const Texture*>& textures)
+{
+	m_Materials[id] = std::make_unique<Material>(textures);
 }
 
 //void Scene::CleanupItems()

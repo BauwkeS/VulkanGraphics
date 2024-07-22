@@ -9,8 +9,10 @@
 #include "Globals.h"
 #include "TimeCount.h"
 
-Mesh3D::Mesh3D(const std::string& modelPath, const std::string& texturePath)
-	: m_ModelPath{modelPath}
+//Mesh3D::Mesh3D(const std::string& modelPath, const std::string& texturePath)
+Mesh3D::Mesh3D(const std::string& modelPath, const Material* materialPtr)
+	: m_ModelPath{modelPath},
+    m_pMaterial{materialPtr}
 {
    /* m_Texture = std::make_unique<Texture>(TEXTURE_PATH);
     LoadModel();*/
@@ -27,7 +29,7 @@ Mesh3D::Mesh3D(const std::string& modelPath, const std::string& texturePath)
    // m_Texture = std::make_unique<Texture>(texturePath);
     //LoadModel();
 
-    m_Texture = std::make_unique<Texture>(texturePath);
+   // m_Texture = std::make_unique<Texture>(texturePath);
 
     LoadModel();
     CreateBuffers();

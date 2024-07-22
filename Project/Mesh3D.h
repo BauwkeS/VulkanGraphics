@@ -6,6 +6,7 @@
 #include <vulkan/vulkan_core.h>
 
 #include "Buffer.h"
+#include "Material.h"
 #include "Texture.h"
 #include "Vertex.h"
 
@@ -20,7 +21,8 @@ public:
     };
 
 
-    Mesh3D(const std::string& modelPath, const std::string& texturePath);
+    //Mesh3D(const std::string& modelPath, const std::string& texturePath);
+    Mesh3D(const std::string& modelPath, const Material* materialPtr);
     ~Mesh3D() = default;
 
     Mesh3D(Mesh3D&& other) = delete;
@@ -41,8 +43,12 @@ public:
 
     void CreateBuffers();
 
-    Texture* GetTexture() { return m_Texture.get(); }
+   
 
+    [[nodiscard]] inline VkDescriptorSet GetMaterialDescriptorSet() const
+    {
+        return m_pMaterial->GetMaterialDescriptorSet();
+    }
 private:
     std::string m_ModelPath;
     glm::mat4 m_ModelMatrix{ 1 };
@@ -68,12 +74,14 @@ private:
 
     void LoadModel();
 
+    const Material* m_pMaterial{};
+
 	//VertexConstant m_vertexConstant;
 
    /* std::unique_ptr<CommandPoolBuffer> m_CommandPoolBuffer{};
 
     */
-    std::unique_ptr<Texture> m_Texture{};
+    //std::unique_ptr<Texture> m_Texture{};
 
     void CreateUBOBuffer();
 };
