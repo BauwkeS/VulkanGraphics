@@ -30,7 +30,7 @@ private:
 	std::vector<std::unique_ptr<Buffer>> m_UBOBuffers;
 	std::vector<void*> m_UBOBuffersMapped{};
 	std::vector<VkDescriptorSet> m_UBODescriptorSets{};
-	std::vector<VkDescriptorSet> m_MaterialDescriptorSets{};
+	//std::vector<VkDescriptorSet> m_MaterialDescriptorSets{};
 
 	void CreateTextureDescriptorSet();
 	//VkDescriptorSet m_TextureDescriptorSets{};
@@ -44,7 +44,8 @@ public:
 
 	void DrawFrame(VkCommandBuffer commandBuffer, uint32_t currentFrame);
 
-	Mesh3D* AddMesh(const std::string& modelPath, const Material* materialPtr);
+	Mesh3D* AddMesh(const std::string& modelPath,
+		const Material* materialPtr, glm::vec3 addToPos);
 	//Mesh3D* AddMesh(const std::string& modelPath, const std::string& id);
 	/*void AddTexture(const std::string& id, const std::string& path);
 	void AddMaterial(const std::string& id,

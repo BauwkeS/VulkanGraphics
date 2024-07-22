@@ -22,7 +22,7 @@ public:
 
 
     //Mesh3D(const std::string& modelPath, const std::string& texturePath);
-    Mesh3D(const std::string& modelPath, const Material* materialPtr);
+    Mesh3D(const std::string& modelPath, const Material* materialPtr, glm::vec3 addToPos);
     ~Mesh3D() = default;
 
     Mesh3D(Mesh3D&& other) = delete;
@@ -44,6 +44,7 @@ public:
     void CreateBuffers();
 
    
+
 
     [[nodiscard]] inline VkDescriptorSet GetMaterialDescriptorSet() const
     {
@@ -72,10 +73,20 @@ private:
     glm::vec3 m_Axis{ 0, 1, 0 };
     glm::vec3 m_Center{ 0, 0, 0 };
 
-    void LoadModel();
+    void LoadModel(glm::vec3 addToPos);
 
     const Material* m_pMaterial{};
+    struct MeshTransform
+{
+    glm::vec3 translation{};
+    glm::vec3 scale{ 1.f, 1.f, 1.f };
+    glm::vec3 rotation{};
 
+   // glm::mat4 GetModelMatrix();
+    //glm::mat3 GetNormalMatrix();
+};
+
+    //glm::vec3 meshTranslation{};
 	//VertexConstant m_vertexConstant;
 
    /* std::unique_ptr<CommandPoolBuffer> m_CommandPoolBuffer{};
@@ -84,4 +95,7 @@ private:
     //std::unique_ptr<Texture> m_Texture{};
 
     void CreateUBOBuffer();
+
+    static void CalcTangent(std::vector<Vertex3D>& vertices,
+        std::vector<uint32_t> indices);
 };

@@ -50,8 +50,24 @@ void Scene::MakeMeshes()
 
 	AddMaterial("cube",cubeTextures);
 
-	m_pipeline2->AddMesh("Models/cube.obj", m_Materials["cube"].get());
+	m_pipeline2->AddMesh("Models/cube.obj", m_Materials["cube"].get(), glm::vec3(4, 0, 1));
 	//m_pipeline2->CreateUBODescriptorSets(cubeTextures);
+
+	//sphere
+	AddTexture("sphere_albedo", "Textures/sphere/sphere_albedo.jpg");
+	AddTexture("sphere_ao", "Textures/sphere/sphere_ao.jpg");
+	AddTexture("sphere_normal", "Textures/sphere/sphere_normal.jpg");
+	AddTexture("sphere_roughness", "Textures/sphere/sphere_roughness.jpg");
+
+	std::vector<const Texture*> sphereTextures{
+		m_Textures["sphere_albedo"].get(),
+			m_Textures["sphere_ao"].get(),
+			m_Textures["sphere_normal"].get(),
+			m_Textures["sphere_roughness"].get() };
+
+	AddMaterial("sphere", sphereTextures);
+
+	m_pipeline2->AddMesh("Models/sphere.obj", m_Materials["sphere"].get(), glm::vec3(1,0,4));
 }
 
 void Scene::PipelineDraw(VkCommandBuffer commandBuffer,

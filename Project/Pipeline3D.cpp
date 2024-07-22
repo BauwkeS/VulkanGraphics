@@ -474,10 +474,10 @@ void Pipeline3D::DrawFrame(VkCommandBuffer commandBuffer, uint32_t currentFrame)
 	
 }
 
-Mesh3D* Pipeline3D::AddMesh(const std::string& modelPath , const Material* materialPtr)
+Mesh3D* Pipeline3D::AddMesh(const std::string& modelPath , const Material* materialPtr, glm::vec3 addToPos)
 {
 //	const Material* pMaterial = m_Materials[id].get();
-		m_Meshes.emplace_back(std::make_unique<Mesh3D>(modelPath, materialPtr));
+		m_Meshes.emplace_back(std::make_unique<Mesh3D>(modelPath, materialPtr, addToPos));
 	return m_Meshes.back().get();
 }
 

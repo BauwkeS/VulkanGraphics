@@ -105,4 +105,4 @@ namespace std
             return (hash(vert.pos) << 1) >> 1 ^ std::hash<glm::vec2>()(vert.texCoord) << 1;
         }
     };
-};  // thanks Mat, couldnt fix the issue
+}
