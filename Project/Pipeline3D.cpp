@@ -64,7 +64,7 @@ void Pipeline3D::CreateUBOBuffers()
 	}
 }
 
-void Pipeline3D::CreateUBODescriptorSets(const Texture* & textures)//VkDescriptorSet descriptorSetMaterial)
+void Pipeline3D::CreateUBODescriptorSets(const std::vector<const Texture*>& textures)//VkDescriptorSet descriptorSetMaterial)
 {
 	/*const std::vector<VkDescriptorSetLayout> layouts(
 		Globals::MAX_FRAMES_IN_FLIGHT,
@@ -106,7 +106,8 @@ void Pipeline3D::CreateUBODescriptorSets(const Texture* & textures)//VkDescripto
 
 		vkUpdateDescriptorSets(Globals::device(), 1, &descriptorWrite, 0, nullptr);
 	}*/
-	
+
+	//UBO STUFF
 	std::vector<VkDescriptorSetLayout> layouts(Globals::MAX_FRAMES_IN_FLIGHT, Globals::UBODescriptorSetLayout());
 	VkDescriptorSetAllocateInfo allocInfo{};
 	allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
@@ -118,39 +119,80 @@ void Pipeline3D::CreateUBODescriptorSets(const Texture* & textures)//VkDescripto
 	if (vkAllocateDescriptorSets(Globals::device(), &allocInfo, m_UBODescriptorSets.data()) != VK_SUCCESS) {
 		throw std::runtime_error("failed to allocate descriptor sets!");
 	}
+	m_MaterialDescriptorSets.resize(4);
+	if (vkAllocateDescriptorSets(Globals::device(), &allocInfo, m_MaterialDescriptorSets.data()) != VK_SUCCESS) {
+		throw std::runtime_error("failed to allocate descriptor sets!");
+	}
+
+	std::vector<VkWriteDescriptorSet> descriptorWrites{};
+
+		VkDescriptorBufferInfo bufferInfo{};
+		VkWriteDescriptorSet descriptoreAddUBO{};
 
 	for (size_t i = 0; i < Globals::MAX_FRAMES_IN_FLIGHT; i++) {
-		VkDescriptorBufferInfo bufferInfo{};
 		bufferInfo.buffer = m_UBOBuffers[i]->GetBuffer();
 		bufferInfo.offset = 0;
 		bufferInfo.range = sizeof(VertexUBO);
 
-		VkDescriptorImageInfo imageInfo{};
+		//VkDescriptorImageInfo imageInfo{};
 	/*	imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 		imageInfo.imageView = m_Meshes[0]->GetTexture()->GetTextureImageView();
 		imageInfo.sampler = m_Meshes[0]->GetTexture()->GetTextureSampler();*/
-		imageInfo = textures->GetImageInfo();
+		//imageInfo = textures->GetImageInfo();
 
-		std::array<VkWriteDescriptorSet, 2> descriptorWrites{};
+		//std::array<VkWriteDescriptorSet, 2> descriptorWrites{};
+		descriptoreAddUBO.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+		descriptoreAddUBO.dstSet = m_UBODescriptorSets[i];
+		descriptoreAddUBO.dstBinding = 0;
+		descriptoreAddUBO.pNext = nullptr,
+		descriptoreAddUBO.dstArrayElement = 0;
+		descriptoreAddUBO.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+		descriptoreAddUBO.descriptorCount = 1;
+		descriptoreAddUBO.pBufferInfo = &bufferInfo;
 
-		descriptorWrites[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-		descriptorWrites[0].dstSet = m_UBODescriptorSets[i];
-		descriptorWrites[0].dstBinding = 0;
-		descriptorWrites[0].dstArrayElement = 0;
-		descriptorWrites[0].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-		descriptorWrites[0].descriptorCount = 1;
-		descriptorWrites[0].pBufferInfo = &bufferInfo;
-
-		descriptorWrites[1].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+		/*descriptorWrites[1].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
 		descriptorWrites[1].dstSet = m_UBODescriptorSets[i];
 		descriptorWrites[1].dstBinding = 1;
 		descriptorWrites[1].dstArrayElement = 0;
 		descriptorWrites[1].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
 		descriptorWrites[1].descriptorCount = 1;
-		descriptorWrites[1].pImageInfo = &imageInfo;
+		descriptorWrites[1].pImageInfo = &imageInfo;*/
 
-		vkUpdateDescriptorSets(Globals::device(), static_cast<uint32_t>(descriptorWrites.size()), descriptorWrites.data(), 0, nullptr);
+		//vkUpdateDescriptorSets(Globals::device(), static_cast<uint32_t>(descriptorWrites.size()), descriptorWrites.data(), 0, nullptr);
+		//vkUpdateDescriptorSets(Globals::device(), 1, &descriptoreAdd, 0, nullptr);
 	}
+	descriptorWrites.push_back(descriptoreAddUBO);
+	//TEXTURE STUFF
+
+	
+
+	
+	//std::vector<VkWriteDescriptorSet> descriptorWrites{};
+
+	for (uint32_t i = 0; i < textures.size(); i++)
+	{
+		VkWriteDescriptorSet descriptoreAdd {
+			.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,
+			.pNext = nullptr,
+			.dstSet = m_MaterialDescriptorSets[i],
+			.dstBinding = i+1,
+			.dstArrayElement = 0,
+			.descriptorCount = 1,
+			.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
+
+			.pImageInfo = &textures[i]->GetImageInfo(),
+			.pBufferInfo = &bufferInfo,
+			.pTexelBufferView = nullptr };
+
+		descriptorWrites.push_back(descriptoreAdd);
+	}
+
+	vkUpdateDescriptorSets(Globals::device(),
+		descriptorWrites.size(),
+		descriptorWrites.data(),
+		0,
+		nullptr);
+
 
 }
 

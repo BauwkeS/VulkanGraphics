@@ -51,10 +51,7 @@ void Scene::MakeMeshes()
 	AddMaterial("cube",cubeTextures);
 
 	m_pipeline2->AddMesh("Models/cube.obj", m_Materials["cube"].get());
-	for (auto textures : cubeTextures)
-	{
-		m_pipeline2->CreateUBODescriptorSets(textures);
-	}
+	m_pipeline2->CreateUBODescriptorSets(cubeTextures);
 }
 
 void Scene::PipelineDraw(VkCommandBuffer commandBuffer,

@@ -13,7 +13,7 @@ class Pipeline3D
 {
 
 public:
-	void CreateUBODescriptorSets(const Texture*& textures);
+	void CreateUBODescriptorSets(const std::vector<const Texture*>& textures);
 private:
 	VkPipeline m_graphicsPipeline{};
 	VkPipelineLayout m_pipelineLayout{};
@@ -30,9 +30,10 @@ private:
 	std::vector<std::unique_ptr<Buffer>> m_UBOBuffers;
 	std::vector<void*> m_UBOBuffersMapped{};
 	std::vector<VkDescriptorSet> m_UBODescriptorSets{};
+	std::vector<VkDescriptorSet> m_MaterialDescriptorSets{};
 
 	void CreateTextureDescriptorSet();
-	std::vector<VkDescriptorSet> m_TextureDescriptorSets{};
+	//VkDescriptorSet m_TextureDescriptorSets{};
 
 	/*std::unordered_map<std::string, std::unique_ptr<Material>> m_Materials;*/
 

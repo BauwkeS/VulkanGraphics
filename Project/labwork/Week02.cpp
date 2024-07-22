@@ -35,6 +35,7 @@ QueueFamilyIndices VulkanBase::findQueueFamilies(VkPhysicalDevice device) {
 
 void VulkanBase::CreateDescriptorSetLayout()
 {
+	//ubo stuff
 	VkDescriptorSetLayoutBinding uboLayoutBinding{};
 	uboLayoutBinding.binding = 0;
 	uboLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
@@ -42,18 +43,37 @@ void VulkanBase::CreateDescriptorSetLayout()
 	uboLayoutBinding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
 	uboLayoutBinding.pImmutableSamplers = nullptr; // Optional
 
-	VkDescriptorSetLayoutBinding samplerLayoutBinding{};
+	//old show for textures
+	/*VkDescriptorSetLayoutBinding samplerLayoutBinding{};
 	samplerLayoutBinding.binding = 1;
 	samplerLayoutBinding.descriptorCount = 1;
 	samplerLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
 	samplerLayoutBinding.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
-	samplerLayoutBinding.pImmutableSamplers = nullptr;
+	samplerLayoutBinding.pImmutableSamplers = nullptr;*/
 
-	std::array<VkDescriptorSetLayoutBinding, 2> bindings = { uboLayoutBinding, samplerLayoutBinding };
+	//std::array<VkDescriptorSetLayoutBinding, 2> bindings = { uboLayoutBinding, samplerLayoutBinding };
+
+
+	//new show for materials
+	std::vector<VkDescriptorSetLayoutBinding> bindings;
+
+	bindings.push_back(uboLayoutBinding);
+
+	//std::vector<VkDescriptorSetLayoutBinding> textureLayoutBindings{};
+	for (uint32_t i = 1; i < 5; i++)
+	{
+		bindings.push_back(VkDescriptorSetLayoutBinding{
+			.binding = i,
+			.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
+			.descriptorCount = 1,
+			.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT,
+			.pImmutableSamplers = nullptr });
+	};
+
 	//
 	VkDescriptorSetLayoutCreateInfo layoutInfo{};
 	layoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
-	layoutInfo.bindingCount = 2;
+	layoutInfo.bindingCount = 2+3;
 	layoutInfo.pBindings = bindings.data();
 	if (vkCreateDescriptorSetLayout(Globals::device(), &layoutInfo, nullptr, &
 		Globals::s_UBODescriptorSetLayout) != VK_SUCCESS) {
