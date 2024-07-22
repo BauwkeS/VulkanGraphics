@@ -43,6 +43,22 @@ void VulkanBase::CreateDescriptorSetLayout()
 	uboLayoutBinding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
 	uboLayoutBinding.pImmutableSamplers = nullptr; // Optional
 
+	VkDescriptorSetLayoutCreateInfo layoutInfo{};
+	layoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+	layoutInfo.bindingCount = 1;
+	layoutInfo.pBindings = &uboLayoutBinding;
+
+	if (vkCreateDescriptorSetLayout(Globals::device(),
+		&layoutInfo,
+		nullptr,
+		&Globals::s_UBODescriptorSetLayout)
+		!= VK_SUCCESS)
+	{
+		throw std::runtime_error(
+			"Failed to create uniform descriptor set layout");
+	}
+
+
 	//old show for textures
 	/*VkDescriptorSetLayoutBinding samplerLayoutBinding{};
 	samplerLayoutBinding.binding = 1;
@@ -55,14 +71,43 @@ void VulkanBase::CreateDescriptorSetLayout()
 
 
 	//new show for materials
-	std::vector<VkDescriptorSetLayoutBinding> bindings;
+	//std::vector<VkDescriptorSetLayoutBinding> bindings;
 
-	bindings.push_back(uboLayoutBinding);
+	//bindings.push_back(uboLayoutBinding);
 
-	//std::vector<VkDescriptorSetLayoutBinding> textureLayoutBindings{};
-	for (uint32_t i = 1; i < 5; i++)
+	////std::vector<VkDescriptorSetLayoutBinding> textureLayoutBindings{};
+	//for (uint32_t i = 1; i < 5; i++)
+	//{
+	//	bindings.push_back(VkDescriptorSetLayoutBinding{
+	//		.binding = i,
+	//		.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
+	//		.descriptorCount = 1,
+	//		.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT,
+	//		.pImmutableSamplers = nullptr });
+	//};
+
+	////
+	//VkDescriptorSetLayoutCreateInfo layoutInfo{};
+	//layoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+	//layoutInfo.bindingCount = 2+3;
+	//layoutInfo.pBindings = bindings.data();
+	//if (vkCreateDescriptorSetLayout(Globals::device(), &layoutInfo, nullptr, &
+	//	Globals::s_UBODescriptorSetLayout) != VK_SUCCESS) {
+	//	throw std::runtime_error("failed to create descriptor set layout!");
+
+
+	//}
+
+	//layoutInfo.pBindings = &samplerLayoutBinding;
+	//if (vkCreateDescriptorSetLayout(Globals::device(), &layoutInfo, nullptr, &
+	//	Globals::s_TextureDescriptorSetLayout) != VK_SUCCESS) {
+	//	throw std::runtime_error("failed to create descriptor set layout!");
+	//}
+
+	std::vector<VkDescriptorSetLayoutBinding> textureLayoutBindings{};
+	for (uint32_t i = 0; i < 4; i++)
 	{
-		bindings.push_back(VkDescriptorSetLayoutBinding{
+		textureLayoutBindings.push_back(VkDescriptorSetLayoutBinding{
 			.binding = i,
 			.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
 			.descriptorCount = 1,
@@ -70,22 +115,17 @@ void VulkanBase::CreateDescriptorSetLayout()
 			.pImmutableSamplers = nullptr });
 	};
 
-	//
-	VkDescriptorSetLayoutCreateInfo layoutInfo{};
-	layoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
-	layoutInfo.bindingCount = 2+3;
-	layoutInfo.pBindings = bindings.data();
-	if (vkCreateDescriptorSetLayout(Globals::device(), &layoutInfo, nullptr, &
-		Globals::s_UBODescriptorSetLayout) != VK_SUCCESS) {
-		throw std::runtime_error("failed to create descriptor set layout!");
+	layoutInfo.pBindings = textureLayoutBindings.data();
+	layoutInfo.bindingCount = 4;
 
-
+	if (vkCreateDescriptorSetLayout(Globals::device(),
+		&layoutInfo,
+		nullptr,
+		&Globals::s_TextureDescriptorSetLayout)
+		!= VK_SUCCESS)
+	{
+		throw std::runtime_error(
+			"failed to create texture descriptor set layout!");
 	}
-
-	//layoutInfo.pBindings = &samplerLayoutBinding;
-	//if (vkCreateDescriptorSetLayout(Globals::device(), &layoutInfo, nullptr, &
-	//	Globals::s_TextureDescriptorSetLayout) != VK_SUCCESS) {
-	//	throw std::runtime_error("failed to create descriptor set layout!");
-	//}
 
 }

@@ -13,7 +13,7 @@ class Pipeline3D
 {
 
 public:
-	void CreateUBODescriptorSets(const std::vector<const Texture*>& textures);
+	void CreateUBODescriptorSets();
 private:
 	VkPipeline m_graphicsPipeline{};
 	VkPipelineLayout m_pipelineLayout{};
