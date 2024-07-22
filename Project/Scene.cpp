@@ -50,7 +50,7 @@ void Scene::MakeMeshes()
 
 	AddMaterial("cube",cubeTextures);
 
-	m_pipeline2->AddMesh("Models/cube.obj", m_Materials["cube"].get(), glm::vec3(4, 0, 1));
+	m_pipeline2->AddMesh("Models/cube.obj", m_Materials["cube"].get(), glm::vec3(-1, 0, 4));
 	//m_pipeline2->CreateUBODescriptorSets(cubeTextures);
 
 	//sphere
