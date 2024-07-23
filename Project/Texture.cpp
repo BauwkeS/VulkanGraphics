@@ -15,7 +15,6 @@ Texture::Texture(std::string texturePath):
     CreateTextureImage();
     CreateTextureImageView();
     CreateTextureSampler();
-    //CreateTextureDescriptorSet();
 
     m_ImageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
     m_ImageInfo.imageView = m_TextureImageView;
@@ -29,11 +28,6 @@ Texture::~Texture()
 
     vkDestroyImage(Globals::device(), m_TextureImage, nullptr);
     vkFreeMemory(Globals::device(), m_TextureImageMemory, nullptr);
-}
-
-void Texture::DestroyTexture()
-{
-    
 }
 
 VkImageView Texture::CreateImageView(VkImage image, VkFormat format, VkImageAspectFlags aspectFlags)
@@ -292,40 +286,3 @@ void Texture::CreateTextureSampler()
         throw std::runtime_error("failed to create texture sampler");
     }
 }
-
-//void Texture::CreateTextureDescriptorSet()
-//{
-//    const VkDescriptorSetLayout layout = Globals::TextureDescriptorSetLayout();
-//
-//    VkDescriptorSetAllocateInfo allocateInfo{};
-//    allocateInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
-//    allocateInfo.descriptorPool = Globals::descriptorPool();
-//    allocateInfo.descriptorSetCount = 1;
-//    allocateInfo.pSetLayouts = &layout;
-//
-//    if (vkAllocateDescriptorSets(Globals::device(),
-//        &allocateInfo,
-//        &m_TextureDescriptorSet)
-//        != VK_SUCCESS)
-//    {
-//        throw std::runtime_error("Failed to allocate texture descriptor sets");
-//    }
-//
-//    VkDescriptorImageInfo imageInfo{};
-//    imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-//    imageInfo.imageView = m_TextureImageView;
-//    imageInfo.sampler = m_TextureSampler;
-//
-//    VkWriteDescriptorSet descriptorWrite{};
-//    descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-//    descriptorWrite.dstSet = m_TextureDescriptorSet;
-//    descriptorWrite.dstBinding = 0;
-//    descriptorWrite.dstArrayElement = 0;
-//    descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-//    descriptorWrite.descriptorCount = 1;
-//    descriptorWrite.pBufferInfo = nullptr;
-//    descriptorWrite.pImageInfo = &imageInfo;
-//    descriptorWrite.pTexelBufferView = nullptr;
-//
-//    vkUpdateDescriptorSets(Globals::device(), 1, &descriptorWrite, 0, nullptr);
-//}

@@ -13,8 +13,7 @@ public:
     Texture operator=(Texture&& other) = delete;
     Texture operator=(const Texture& other) = delete;
 
-    void DestroyTexture();
-
+    //image functions
     static VkImageView CreateImageView(VkImage image, VkFormat format, VkImageAspectFlags aspectFlags);
     static void CreateImage(uint32_t width, uint32_t height, VkFormat format, VkImageTiling tiling,
         VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage& image,
@@ -26,19 +25,23 @@ public:
         VkImage image, uint32_t width,
         uint32_t height);
 
-    VkImageView GetTextureImageView() { return m_TextureImageView; }
-    VkSampler GetTextureSampler() { return m_TextureSampler; }
-
-    void CreateTextureDescriptorSet();
-
+    //getters
     [[nodiscard]] const VkDescriptorImageInfo& GetImageInfo() const
     {
         return m_ImageInfo;
     }
+
+    [[nodiscard]] const VkImageView GetTextureImageView() const
+    {
+        return m_TextureImageView;
+    }
+	[[nodiscard]] const VkSampler GetTextureSampler() const
+    {
+        return m_TextureSampler;
+    }
 private:
     std::string m_TexturePath;
 
-    //uint32_t m_MipLevels{};
     VkImage m_TextureImage{};
     VkDeviceMemory m_TextureImageMemory{};
     VkImageView m_TextureImageView{};
@@ -49,9 +52,4 @@ private:
     void CreateTextureImage();
     void CreateTextureImageView();
     void CreateTextureSampler();
-
-    /*static bool HasStencilComponent(VkFormat format);
-
-    void GenerateMipmaps(VkImage image, VkFormat imageFormat, int32_t texWidth,
-        int32_t texHeight, uint32_t mipLevels);*/
 };

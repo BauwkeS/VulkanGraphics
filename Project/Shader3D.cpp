@@ -22,24 +22,6 @@ Shader3D::~Shader3D()
 	vkDestroyShaderModule(Globals::device(), m_FragmentInfo.module, nullptr);
 }
 
-void Shader3D::Initialize()
-{
-	/*m_UBOBuffer = std::make_unique<Buffer>(
-		VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
-		VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
-		sizeof(VertexUBO));*/
-
-	
-}
-
-//void Shader::DetroyShaderModules()
-//{
-//	for (VkPipelineShaderStageCreateInfo& stageInfo : m_ShaderStages) {
-//		vkDestroyShaderModule(m_Device, stageInfo.module, nullptr);
-//	}
-//	m_ShaderStages.clear();
-//}
-
 VkPipelineShaderStageCreateInfo Shader3D::createFragmentShaderInfo() {
 	std::vector<char> fragShaderCode = readFile(m_FragmentShaderFile);
 	VkShaderModule fragShaderModule = createShaderModule(fragShaderCode);

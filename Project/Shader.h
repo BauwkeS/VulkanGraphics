@@ -16,7 +16,6 @@ public:
 	}
 	~Shader();
 	void Initialize();
-	//void DetroyShaderModules();
 	
 	VkPipelineVertexInputStateCreateInfo createVertexInputStateInfo();
 	

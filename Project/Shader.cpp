@@ -21,15 +21,6 @@ Shader::~Shader()
 
 }
 
-
-//void Shader::DetroyShaderModules()
-//{
-//	for (VkPipelineShaderStageCreateInfo& stageInfo : m_ShaderStages) {
-//		vkDestroyShaderModule(m_Device, stageInfo.module, nullptr);
-//	}
-//	m_ShaderStages.clear();
-//}
-
 VkPipelineShaderStageCreateInfo Shader::createFragmentShaderInfo() {
 	std::vector<char> fragShaderCode = readFile(m_FragmentShaderFile);
 	VkShaderModule fragShaderModule = createShaderModule(fragShaderCode);

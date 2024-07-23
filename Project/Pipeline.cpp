@@ -9,25 +9,7 @@ void Pipeline::DrawScene(VkCommandBuffer commandBuffer, std::vector<MeshFactory>
 {
 	vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_graphicsPipeline);
 
-	/*vkCmdBindDescriptorSets(commandBuffer,
-		VK_PIPELINE_BIND_POINT_GRAPHICS,
-		m_PipelineLayout,
-		0,
-		1,
-		&m_UniformDescriptorSets[currentFrame],
-		0,
-		nullptr);*/
-
 	for (auto&& mesh : meshes) {
-		/*VkDescriptorSet textureDescriptorSet = sprite->GetTextureDescriptorSet();
-		vkCmdBindDescriptorSets(commandBuffer,
-			VK_PIPELINE_BIND_POINT_GRAPHICS,
-			m_PipelineLayout,
-			1,
-			1,
-			&textureDescriptorSet,
-			0,
-			nullptr);*/
 		mesh.Draw(commandBuffer);
 	}
 }
@@ -36,12 +18,10 @@ Pipeline::~Pipeline()
 {
 	vkDestroyPipeline(Globals::device(), m_graphicsPipeline, nullptr);
 	vkDestroyPipelineLayout(Globals::device(), m_pipelineLayout, nullptr);
-
 }
 
 void Pipeline::CreateGraphicsPipeline()
 {
-
 	m_GradientShaderInfo->Initialize();
 
 	VkPipelineViewportStateCreateInfo viewportState{};
@@ -121,8 +101,6 @@ void Pipeline::CreateGraphicsPipeline()
 	auto vertexInputStateInfo = m_GradientShaderInfo->createVertexInputStateInfo();
 	auto inputAssemblyStateInfo = m_GradientShaderInfo->createInputAssemblyStateInfo();
 
-
-
 	pipelineInfo.stageCount = 2;
 	pipelineInfo.pStages = shaderStages;
 	pipelineInfo.pVertexInputState = &vertexInputStateInfo;
@@ -163,16 +141,7 @@ void Pipeline::DrawFrame(VkCommandBuffer commandBuffer, std::vector<MeshFactory>
 	scissor.extent = Globals::swapChainExtent();
 	vkCmdSetScissor(commandBuffer, 0, 1, &scissor);
 
-	//drawScene();
-	//vkCmdDraw(commandBuffer, 6, 1, 0, 0);
 	DrawScene(commandBuffer, meshes);
 
 	
 }
-
-//void Pipeline::DestroyPipeline()
-//{
-//	vkDestroyPipeline(m_Device,m_graphicsPipeline, nullptr);
-//	vkDestroyPipelineLayout(m_Device, m_pipelineLayout, nullptr);
-//	//vkDestroyRenderPass(device, m_renderPass, nullptr);
-//}

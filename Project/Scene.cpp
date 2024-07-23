@@ -6,7 +6,6 @@ Scene::Scene()
 	m_pipeline = new Pipeline();
 	m_pipeline2 = new Pipeline3D();
 	MakeMeshes();
-	//m_pipeline2->CreateUBODescriptorSets();
 }
 
 Scene::~Scene()
@@ -17,14 +16,9 @@ Scene::~Scene()
 	vkDestroyRenderPass(Globals::device(), Globals::renderPass(), nullptr);
 }
 
-void Scene::InitItems()
-{
-	m_pipeline->CreateGraphicsPipeline();
-	//m_pipeline2->CreateGraphicsPipeline();
-}
-
 void Scene::MakeMeshes()
 {
+	//pipeline 2D
 	mesh.CreateQuad(0.5f, 0.2f, 0.5f, 0.7f);
 	mesh.CreateVertexBuffer();
 	mesh2.CreateOval(0.0f, 0.0f, 0.2f, 100.0f);
@@ -33,8 +27,7 @@ void Scene::MakeMeshes()
 	m_meshes.push_back(mesh);
 	m_meshes.push_back(mesh2);
 
-	//mesh3d_1 = new Mesh3D("Models/viking_room.obj");
-	//m_pipeline2->AddMesh("Models/cube.obj", "Textures/cube/cube_albedo.jpg");
+	//pipeline 3D
 
 	//Add cube info inside pipeline
 	AddTexture("cube_albedo", "Textures/cube/cube_albedo.jpg");
@@ -53,7 +46,6 @@ void Scene::MakeMeshes()
 	AddMaterial("cube",cubeTextures);
 
 	m_pipeline2->AddMesh("Models/cube.obj", m_Materials["cube"].get(), glm::vec3(-1, 0, 4));
-	//m_pipeline2->CreateUBODescriptorSets(cubeTextures);
 
 	//sphere
 	AddTexture("sphere_albedo", "Textures/sphere/sphere_albedo.jpg");
@@ -77,14 +69,6 @@ void Scene::MakeMeshes()
 void Scene::PipelineDraw(VkCommandBuffer commandBuffer,
 	const std::vector<VkFramebuffer>& swapChainFramebuffers, uint32_t imageIndex, uint32_t currentFrame)
 {
-	/*std::array<VkClearValue, 2> clearValues{};
-	clearValues[0].color = {
-		{0.0f, 0.0f, 0.0f, 1.0f}
-	};
-	clearValues[1].depthStencil = { 1.0f, 0 };*/
-
-	//m_pipeline2->UpdateUBO(currentFrame);
-
 	VkRenderPassBeginInfo renderPassInfo{};
 	renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
 	renderPassInfo.renderPass = Globals::renderPass();
@@ -111,8 +95,6 @@ void Scene::PipelineDraw(VkCommandBuffer commandBuffer,
 void Scene::Update(uint32_t currentFrame)
 {
 	m_pipeline2->Update(currentFrame);
-
-	//update your MESHES here too!
 }
 
 void Scene::AddTexture(const std::string& id, const std::string& path)
@@ -124,13 +106,3 @@ void Scene::AddMaterial(const std::string& id, const std::vector<const Texture*>
 {
 	m_Materials[id] = std::make_unique<Material>(textures);
 }
-
-//void Scene::CleanupItems()
-//{
-//	//m_MeshFactory.DestroyMesh(device);
-//	for (auto& mesh : m_meshes) {
-//		mesh.DestroyMesh(m_Device);
-//	}
-//
-//	//m_pipeline->DestroyPipeline();
-//}

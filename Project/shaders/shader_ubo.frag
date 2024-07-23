@@ -10,15 +10,8 @@ layout(location = 0) in vec3 inPos;
 layout(location = 1) in vec3 inColor;
 layout(location = 2) in vec3 inNormal;
 layout(location = 3) in vec2 inTexCoord;
-//layout(location = 5) in vec3 inCameraPos;
 
 layout(location = 0) out vec4 outColor;
-
-//const light vars
-const vec3 lightPos = vec3(1.2f, 1.f, 2.f);
-const vec3 lightColor = vec3(.8f, .8f, 1.f);
-
-
 
 struct Light
 {
@@ -125,6 +118,9 @@ vec3 PBR()
     lights[1].pos = vec3(0.0, 10.0, 5.0);
     lights[1].color = vec3(0.8, 0.8, 1.0);
 
+
+    //Use functions from each light to create full PBR
+
     vec3 outgoingLight = vec3(0.0);
     for (int i = 0; i < numLights; i++)
     {
@@ -152,9 +148,6 @@ vec3 PBR()
     return outgoingLight;
 }
 
-
-
 void main() {
-    //outColor = texture(texSampler, inTexCoord);
-outColor = vec4(PBR(), 1.0);
+    outColor = vec4(PBR(), 1.0);
 }

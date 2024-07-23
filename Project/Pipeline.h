@@ -4,7 +4,6 @@
 #include <vector>
 #include <string>
 #include <array>
-#include <Command.h>
 #include <Shader.h>
 
 #include "MeshFactory.h"
@@ -26,6 +25,7 @@ public:
 		"shaders/shader.vert.spv",
 		"shaders/shader.frag.spv"
 		};
+		CreateGraphicsPipeline();
 	}
 	~Pipeline();
 	void CreateGraphicsPipeline();

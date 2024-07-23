@@ -41,11 +41,6 @@ void Buffer::Upload(VkDeviceSize size, void* data)
     vkUnmapMemory(Globals::device(), m_BufferMemory);
 }
 
-void Buffer::Map(VkDeviceSize size, void* data)
-{
-
-}
-
 void Buffer::Destroy()
 {
     vkDestroyBuffer(Globals::device(), m_Buffer, nullptr);

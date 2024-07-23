@@ -114,7 +114,7 @@ private:
 
 		m_SceneOne = new Scene();
 
-		m_SceneOne->InitItems();
+		//m_SceneOne->InitItems();
 		createColorResources();
 		createDepthResources();
 		createFrameBuffers();

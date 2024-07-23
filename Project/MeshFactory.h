@@ -21,9 +21,6 @@ private:
 
 
 public:
-	MeshFactory(){};
-	
-	~MeshFactory() {}
 	void DestroyMesh();
 	void CreateVertexBuffer();
 	void Draw(VkCommandBuffer buffer);

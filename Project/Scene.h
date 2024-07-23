@@ -2,7 +2,6 @@
 
 #include <vector>
 #include <string>
-#include <array>
 #include <MeshFactory.h>
 #include <Pipeline.h>
 #include <Pipeline3D.h>
@@ -13,20 +12,21 @@ public:
 	Scene();
 	~Scene();
 
-	void InitItems();
 	void MakeMeshes();
 	void PipelineDraw(VkCommandBuffer commandBuffer,
 		const std::vector<VkFramebuffer>& swapChainFramebuffers, uint32_t imageIndex,
 		uint32_t currentFrame);
-	//void CleanupItems();
 	void Update(uint32_t currentFrame);
+
 private:
+	//pipeline 2D
 	Pipeline* m_pipeline;
-	Pipeline3D* m_pipeline2;
 	std::vector<MeshFactory> m_meshes{};
 	MeshFactory mesh{  };
 	MeshFactory mesh2{  };
 
+	//pipeline 3D
+	Pipeline3D* m_pipeline2;
 
 	//materials and textures for the PBR
 	void AddTexture(const std::string& id, const std::string& path);

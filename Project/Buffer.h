@@ -18,7 +18,6 @@ public:
 	VkDeviceMemory GetBufferMemory() const { return m_BufferMemory; }
 
     void Upload(VkDeviceSize size, void* data);
-    void Map(VkDeviceSize size, void* data);
     void Destroy();
     void BindAsVertexBuffer(VkCommandBuffer commandBuffer);
     void BindAsIndexBuffer(VkCommandBuffer commandBuffer);

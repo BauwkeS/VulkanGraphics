@@ -9,34 +9,12 @@
 #include "Globals.h"
 #include "TimeCount.h"
 
-//Mesh3D::Mesh3D(const std::string& modelPath, const std::string& texturePath)
 Mesh3D::Mesh3D(const std::string& modelPath, const Material* materialPtr, glm::vec3 addToPos)
 	: m_ModelPath{modelPath},
     m_pMaterial{materialPtr}
 {
-   /* m_Texture = std::make_unique<Texture>(TEXTURE_PATH);
-    LoadModel();*/
-    //void* data1 = m_Vertices.data();
-    //size_t data2 = sizeof(Vertex3D);
-    //uint32_t data3 = static_cast<uint32_t>(m_Vertices.size());
-    //CommandPoolBuffer::VertexData vertexData(data1,data2,data3);
-    /*m_CommandPoolBuffer = std::make_unique<CommandPoolBuffer>(
-        CommandPoolBuffer::VertexData(m_Vertices.data(),
-            sizeof(Vertex3D),
-            static_cast<uint32_t>(m_Vertices.size())),
-        m_Indices);*/
-
-   // m_Texture = std::make_unique<Texture>(texturePath);
-    //LoadModel();
-
-   // m_Texture = std::make_unique<Texture>(texturePath);
-
     LoadModel(addToPos);
     CreateBuffers();
-   }
-
-void Mesh3D::DestroyMesh()
-{
 }
 
 void Mesh3D::Update()
@@ -50,12 +28,10 @@ void Mesh3D::Update()
     }
 }
 
-
 void Mesh3D::Draw(VkCommandBuffer commandBuffer)
 {
     m_VertexBuffer->BindAsVertexBuffer(commandBuffer);
     m_IndexBuffer->BindAsIndexBuffer(commandBuffer);
-    //CreateUBOBuffer();
 
     vkCmdDrawIndexed(commandBuffer,
         (static_cast<uint32_t>(m_Indices.size())),1,0,
@@ -71,11 +47,6 @@ void Mesh3D::CreateBuffers()
         VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
         VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT
         | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
-
-    /*m_StagingBuffer = std::make_unique<Buffer>(
-        std::max(vertexBufferSize, indexBufferSize),
-        VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
-        VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);*/
 
         // fill vertex buffer
     stagingBuffer.Upload(vertexBufferSize, m_Vertices.data());
@@ -184,11 +155,4 @@ void Mesh3D::LoadModel(glm::vec3 addToPos)
     }
 
     CalcTangent(m_Vertices, m_Indices);
-
-    /*std::cout << countV << std::endl;
-    for (auto vert : uniqueVertices)
-    {
-	    
-	 std::cout << vert.first.pos.x << ", "<< vert.first.pos.y << ", " <<vert.first.pos.z << std::endl;
-    }*/
 }

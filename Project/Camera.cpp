@@ -4,11 +4,7 @@
 #include <glm/gtx/euler_angles.hpp>
 #include <glm/gtx/string_cast.hpp>
 
-
 #include "Camera.h"
-
-#include <iostream>
-
 
 #include "TimeCount.h"
 #include "InputSys.h"
@@ -26,8 +22,6 @@ Camera::Camera(const glm::vec3& origin, float fov, float aspectRatio) :
 void Camera::Update()
 {
     const auto deltaTime{ TimeCount::Delta() };
-
-    //DELTATIME IS CORRECT
 
     // Keyboard input
     {
@@ -69,6 +63,7 @@ void Camera::Update()
         }
     }
 
+    //Update to correct positions 
     m_Origin = lerpCamera(m_Origin, m_OriginTarget, deltaTime, .5f);
     m_TotalPitch = lerpCamera(m_TotalPitch, m_TotalPitchTarget, deltaTime, .5f);
     m_TotalYaw = lerpCamera(m_TotalYaw, m_TotalYawTarget, deltaTime, .5f);

@@ -16,9 +16,6 @@ public:
 		const std::string& fragmentShaderFile
 	);
 	~Shader3D();
-	
-	void Initialize();
-	//void DetroyShaderModules();
 
 	VkPipelineVertexInputStateCreateInfo createVertexInputStateInfo();
 	
