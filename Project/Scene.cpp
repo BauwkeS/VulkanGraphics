@@ -41,12 +41,14 @@ void Scene::MakeMeshes()
 	AddTexture("cube_ao", "Textures/cube/cube_ao.jpg");
 	AddTexture("cube_normal", "Textures/cube/cube_normal.jpg");
 	AddTexture("cube_roughness", "Textures/cube/cube_roughness.jpg");
+	AddTexture("cube_metal", "Textures/cube/cube_metal.jpg");
 
 	std::vector<const Texture*> cubeTextures{
 		m_Textures["cube_albedo"].get(),
-			m_Textures["cube_ao"].get(),
 			m_Textures["cube_normal"].get(),
-			m_Textures["cube_roughness"].get() };
+			m_Textures["cube_ao"].get(),
+			m_Textures["cube_roughness"].get(),
+			m_Textures["cube_metal"].get() };
 
 	AddMaterial("cube",cubeTextures);
 
@@ -58,11 +60,13 @@ void Scene::MakeMeshes()
 	AddTexture("sphere_ao", "Textures/sphere/sphere_ao.jpg");
 	AddTexture("sphere_normal", "Textures/sphere/sphere_normal.jpg");
 	AddTexture("sphere_roughness", "Textures/sphere/sphere_roughness.jpg");
+	AddTexture("sphere_metal", "Textures/sphere/sphere_metal.png");
 
 	std::vector<const Texture*> sphereTextures{
 		m_Textures["sphere_albedo"].get(),
-			m_Textures["sphere_ao"].get(),
 			m_Textures["sphere_normal"].get(),
+			m_Textures["sphere_ao"].get(),
+			m_Textures["sphere_metal"].get(),
 			m_Textures["sphere_roughness"].get() };
 
 	AddMaterial("sphere", sphereTextures);

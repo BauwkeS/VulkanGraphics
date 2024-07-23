@@ -58,54 +58,10 @@ void VulkanBase::CreateDescriptorSetLayout()
 			"Failed to create uniform descriptor set layout");
 	}
 
-
-	//old show for textures
-	/*VkDescriptorSetLayoutBinding samplerLayoutBinding{};
-	samplerLayoutBinding.binding = 1;
-	samplerLayoutBinding.descriptorCount = 1;
-	samplerLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-	samplerLayoutBinding.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
-	samplerLayoutBinding.pImmutableSamplers = nullptr;*/
-
-	//std::array<VkDescriptorSetLayoutBinding, 2> bindings = { uboLayoutBinding, samplerLayoutBinding };
-
-
-	//new show for materials
-	//std::vector<VkDescriptorSetLayoutBinding> bindings;
-
-	//bindings.push_back(uboLayoutBinding);
-
-	////std::vector<VkDescriptorSetLayoutBinding> textureLayoutBindings{};
-	//for (uint32_t i = 1; i < 5; i++)
-	//{
-	//	bindings.push_back(VkDescriptorSetLayoutBinding{
-	//		.binding = i,
-	//		.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
-	//		.descriptorCount = 1,
-	//		.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT,
-	//		.pImmutableSamplers = nullptr });
-	//};
-
-	////
-	//VkDescriptorSetLayoutCreateInfo layoutInfo{};
-	//layoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
-	//layoutInfo.bindingCount = 2+3;
-	//layoutInfo.pBindings = bindings.data();
-	//if (vkCreateDescriptorSetLayout(Globals::device(), &layoutInfo, nullptr, &
-	//	Globals::s_UBODescriptorSetLayout) != VK_SUCCESS) {
-	//	throw std::runtime_error("failed to create descriptor set layout!");
-
-
-	//}
-
-	//layoutInfo.pBindings = &samplerLayoutBinding;
-	//if (vkCreateDescriptorSetLayout(Globals::device(), &layoutInfo, nullptr, &
-	//	Globals::s_TextureDescriptorSetLayout) != VK_SUCCESS) {
-	//	throw std::runtime_error("failed to create descriptor set layout!");
-	//}
-
+	//texture stuff
+	//split up to only update the texture bindings when making materials
 	std::vector<VkDescriptorSetLayoutBinding> textureLayoutBindings{};
-	for (uint32_t i = 0; i < 4; i++)
+	for (uint32_t i = 0; i < 5; i++)
 	{
 		textureLayoutBindings.push_back(VkDescriptorSetLayoutBinding{
 			.binding = i,
@@ -116,7 +72,7 @@ void VulkanBase::CreateDescriptorSetLayout()
 	};
 
 	layoutInfo.pBindings = textureLayoutBindings.data();
-	layoutInfo.bindingCount = 4;
+	layoutInfo.bindingCount = 5;
 
 	if (vkCreateDescriptorSetLayout(Globals::device(),
 		&layoutInfo,

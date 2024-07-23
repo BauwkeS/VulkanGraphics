@@ -4,6 +4,7 @@ layout(set = 1, binding = 0) uniform sampler2D albedoMap;
 layout(set = 1, binding = 1) uniform sampler2D normalMap;
 layout(set = 1, binding = 2) uniform sampler2D AOMap;
 layout(set = 1, binding = 3) uniform sampler2D roughnessMap;
+layout(set = 1, binding = 4) uniform sampler2D metallicMap;
 
 layout(location = 0) in vec3 inPos;
 layout(location = 1) in vec3 inColor;
@@ -112,10 +113,10 @@ vec3 PBR()
     vec3 albedo = texture(albedoMap, inTexCoord).rgb;
 
     float ao = texture(AOMap, inTexCoord).r;
-   // float metallic = texture(metallicMap, inTexCoord).r;
+    float metallic = texture(metallicMap, inTexCoord).r;
     float roughness = texture(roughnessMap, inTexCoord).r;
 
-    vec3 F0 = mix(vec3(0.04), albedo, 0);
+    vec3 F0 = mix(vec3(0.04), albedo, metallic);
 
     const int numLights = 2;
     Light lights[numLights];
@@ -129,7 +130,7 @@ vec3 PBR()
     {
         vec3 lightDir = normalize(lights[i].pos - inPos);
         outgoingLight += SpecularContribution(lightDir, view, normal, F0,
-                                              0, roughness, albedo, lights[i].color);
+                                              metallic, roughness, albedo, lights[i].color);
     }
 
     vec2 brdf = (0.08 * vec2(max(dot(normal, view), 0.0), roughness));
@@ -142,7 +143,7 @@ vec3 PBR()
     vec3 specular = reflection * (fresnell * brdf.x + brdf.y);
 
     vec3 Kd = 1.0 - fresnell;
-    Kd *= 1.0 - 0;
+    Kd *= 1.0 - metallic;
 
     vec3 ambient = vec3(0.01) + (Kd * diffuse + specular);
     ambient *= ao;

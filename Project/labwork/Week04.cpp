@@ -23,26 +23,6 @@ void VulkanBase::createImageViews()
 	}
 }
 
-//VkImageView VulkanBase::createImageView(VkImage image, VkFormat format, VkImageAspectFlags aspectFlags) {
-//	VkImageViewCreateInfo viewInfo{};
-//	viewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
-//	viewInfo.image = image;
-//	viewInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
-//	viewInfo.format = format;
-//	viewInfo.subresourceRange.aspectMask = aspectFlags;
-//	viewInfo.subresourceRange.baseMipLevel = 0;
-//	viewInfo.subresourceRange.levelCount = 1;
-//	viewInfo.subresourceRange.baseArrayLayer = 0;
-//	viewInfo.subresourceRange.layerCount = 1;
-//
-//	VkImageView imageView;
-//	if (vkCreateImageView(Globals::device() , &viewInfo, nullptr, &imageView) != VK_SUCCESS) {
-//		throw std::runtime_error("failed to create image view!");
-//	}
-//
-//	return imageView;
-//}
-
 VkFormat VulkanBase::findSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features) {
 	for (VkFormat format : candidates) {
 		VkFormatProperties props;
@@ -65,44 +45,6 @@ VkFormat VulkanBase::findDepthFormat() {
 		VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT
 	);
 }
-
-//void VulkanBase::createImage(uint32_t width, uint32_t height, VkFormat format, VkImageTiling tiling,
-//	VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage& image,
-//	VkDeviceMemory& imageMemory) {
-//	VkImageCreateInfo imageInfo{};
-//	imageInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
-//	imageInfo.imageType = VK_IMAGE_TYPE_2D;
-//	imageInfo.extent.width = width;
-//	imageInfo.extent.height = height;
-//	imageInfo.extent.depth = 1;
-//	imageInfo.mipLevels = 1;
-//	imageInfo.arrayLayers = 1;
-//	imageInfo.format = format;
-//	imageInfo.tiling = tiling;
-//	imageInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-//	imageInfo.usage = usage;
-//	imageInfo.samples = VK_SAMPLE_COUNT_1_BIT;
-//	imageInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
-//
-//	if (vkCreateImage(Globals::device(), &imageInfo, nullptr, &image) != VK_SUCCESS) {
-//		throw std::runtime_error("failed to create image!");
-//	}
-//
-//	VkMemoryRequirements memRequirements;
-//	vkGetImageMemoryRequirements(Globals::device(), image, &memRequirements);
-//
-//	VkMemoryAllocateInfo allocInfo{};
-//	allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
-//	allocInfo.allocationSize = memRequirements.size;
-//	allocInfo.memoryTypeIndex = Globals::FindMemoryType(memRequirements.memoryTypeBits, properties);
-//
-//	if (vkAllocateMemory(Globals::device(), &allocInfo, nullptr, &imageMemory) != VK_SUCCESS) {
-//		throw std::runtime_error("failed to allocate image memory!");
-//	}
-//
-//	vkBindImageMemory(Globals::device(), image, imageMemory, 0);
-//}
-
 
 void VulkanBase::createColorResources()
 {
@@ -267,9 +209,6 @@ void VulkanBase::RecreateSwapChain()
 
 	m_pCamera->aspectRatio(static_cast<float>(Globals::swapChainExtent() .width)
 	/ Globals::swapChainExtent().height);
-
-
-	//m_CameraPtr->aspectRatio(GetAspectRatio());
 }
 
 void VulkanBase::CleanupSwapChain()
@@ -297,32 +236,6 @@ void VulkanBase::CleanupSwapChain()
 
 void VulkanBase::createFrameBuffers()
 {
-	/*m_swapChainFramebuffers.resize(swapChainImageViews.size());
-
-	for (size_t i = 0; i < swapChainImageViews.size(); i++)
-	{
-		std::array<VkImageView, 3> attachments
-			= { m_ColorImageView, m_DepthImageView, swapChainImageViews[i] };
-
-		VkFramebufferCreateInfo framebufferInfo{};
-		framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
-		framebufferInfo.renderPass = Globals::renderPass();
-		framebufferInfo.attachmentCount
-			= static_cast<uint32_t>(attachments.size());
-		framebufferInfo.pAttachments = attachments.data();
-		framebufferInfo.width = swapChainExtent.width;
-		framebufferInfo.height = swapChainExtent.height;
-		framebufferInfo.layers = 1;
-
-		if (vkCreateFramebuffer(Globals::device(),
-			&framebufferInfo,
-			nullptr,
-			&m_swapChainFramebuffers[i])
-			!= VK_SUCCESS)
-		{
-			throw std::runtime_error("Failed to create framebuffer!");
-		}*/
-
 	m_swapChainFramebuffers.resize(swapChainImageViews.size());
 
 	for (size_t i = 0; i < swapChainImageViews.size(); i++) {
