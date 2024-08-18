@@ -104,11 +104,12 @@ private:
 		CreateDescriptorSetLayout();
 		CreateDescriptorPool();
 
-		m_pCamera = new Camera(glm::vec3{ },
+		m_pCamera = new Camera(glm::vec3{0,0,8 },
 		glm::radians(90.f),(
 		static_cast<float>(Globals::swapChainExtent().width)
 		/ Globals::swapChainExtent().height));
-	m_pCamera->SetPitch(.5f);
+	//m_pCamera->SetPitch(.5f);
+	m_pCamera->SetYaw(185);
 	Globals::s_pCamera = m_pCamera;
 
 

@@ -113,10 +113,10 @@ vec3 PBR()
 
     const int numLights = 2;
     Light lights[numLights];
-    lights[0].pos = vec3(-10.0, 20.0, -50.0);
-    lights[0].color = vec3(0.8, 0.8, 1.0);
-    lights[1].pos = vec3(0.0, 10.0, 5.0);
-    lights[1].color = vec3(0.8, 0.8, 1.0);
+lights[0].pos = vec3(-10.0, 20.0, -50.0);
+lights[0].color = vec3(0.8, 0.8, 1.0);
+lights[1].pos = vec3(0.0, 10.0, 5.0);
+lights[1].color = vec3(0.8, 0.8, 1.0);
 
 
     //Use functions from each light to create full PBR
